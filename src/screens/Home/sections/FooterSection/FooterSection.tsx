@@ -374,9 +374,11 @@ export const FooterSection = (): JSX.Element => {
                   <a
                     key={itemIndex}
                     href="#"
-                    className="[font-family:'Fahkwang',Helvetica] font-normal text-white text-sm tracking-[0] leading-6 hover:underline transition-all duration-300 hover:text-[#75bf44] hover:translate-x-2"
+                    className="[font-family:'Fahkwang',Helvetica] font-normal text-white text-sm tracking-[0] leading-6 transition-all duration-300 hover:text-[#75bf44] hover:translate-x-2 relative group overflow-hidden"
                   >
-                    {item}
+                    <span className="relative z-10">{item}</span>
+                    {/* Draw underline animation */}
+                    <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-[#75bf44] transition-all duration-500 ease-out group-hover:w-full"></span>
                   </a>
                 ))}
               </div>
@@ -395,8 +397,10 @@ export const FooterSection = (): JSX.Element => {
             transform: 'translate3d(0, 0, 0)'
           }}
         >
-          <div className="[font-family:'Fahkwang',Helvetica] font-normal text-white text-sm tracking-[0] leading-6 transition-colors duration-300 hover:text-[#75bf44]">
-            Privacy Policy/Terms
+          <div className="[font-family:'Fahkwang',Helvetica] font-normal text-white text-sm tracking-[0] leading-6 transition-colors duration-300 hover:text-[#75bf44] relative group overflow-hidden cursor-pointer">
+            <span className="relative z-10">Privacy Policy/Terms</span>
+            {/* Draw underline animation for bottom link too */}
+            <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-[#75bf44] transition-all duration-500 ease-out group-hover:w-full"></span>
           </div>
 
           <div className="flex items-center gap-2 mt-4 sm:mt-0">
