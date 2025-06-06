@@ -66,72 +66,35 @@ export const FeaturedProjectSection = (): JSX.Element => {
         wordsClass: "word"
       });
 
-      // Initial state for heading
+      // Initial state for heading - ensure it's visible
       gsap.set(splitText.chars, {
         opacity: 0,
-        y: 80,
-        rotationX: -90,
-        transformOrigin: "50% 50% -50px"
+        y: 50,
+        rotationX: -45,
+        transformOrigin: "50% 50% -25px"
       });
 
       // Heading reveal animation
       gsap.to(splitText.chars, {
-        duration: 1.4,
+        duration: 1,
         opacity: 1,
         y: 0,
         rotationX: 0,
         stagger: {
-          amount: 1,
+          amount: 0.6,
           from: "start"
         },
-        ease: "power4.out",
+        ease: "power3.out",
         scrollTrigger: {
           trigger: headingRef.current,
-          start: "top 85%",
-          end: "top 50%",
+          start: "top 90%",
+          end: "top 60%",
           toggleActions: "play none none reverse"
         }
       });
 
-      // Parallax effect for heading
+      // Subtle parallax effect for heading
       gsap.to(headingRef.current, {
-        yPercent: -20,
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 1.5,
-          invalidateOnRefresh: true
-        }
-      });
-    }
-
-    // Tabs container animation and parallax
-    if (tabsContainerRef.current) {
-      gsap.fromTo(tabsContainerRef.current,
-        {
-          opacity: 0,
-          x: 50,
-          scale: 0.95
-        },
-        {
-          opacity: 1,
-          x: 0,
-          scale: 1,
-          duration: 1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: tabsContainerRef.current,
-            start: "top 85%",
-            end: "top 60%",
-            toggleActions: "play none none reverse"
-          }
-        }
-      );
-
-      // Parallax for tabs
-      gsap.to(tabsContainerRef.current, {
         yPercent: -10,
         ease: "none",
         scrollTrigger: {
@@ -144,9 +107,31 @@ export const FeaturedProjectSection = (): JSX.Element => {
       });
     }
 
-    // Masonry container parallax
-    if (masonryContainerRef.current) {
-      gsap.to(masonryContainerRef.current, {
+    // Tabs container animation and parallax
+    if (tabsContainerRef.current) {
+      gsap.fromTo(tabsContainerRef.current,
+        {
+          opacity: 0,
+          x: 30,
+          scale: 0.98
+        },
+        {
+          opacity: 1,
+          x: 0,
+          scale: 1,
+          duration: 0.8,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: tabsContainerRef.current,
+            start: "top 85%",
+            end: "top 65%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      );
+
+      // Subtle parallax for tabs
+      gsap.to(tabsContainerRef.current, {
         yPercent: -5,
         ease: "none",
         scrollTrigger: {
@@ -159,38 +144,53 @@ export const FeaturedProjectSection = (): JSX.Element => {
       });
     }
 
-    // View all button animation
-    if (viewAllButtonRef.current) {
-      gsap.fromTo(viewAllButtonRef.current,
-        {
-          opacity: 0,
-          y: 60,
-          scale: 0.9
-        },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 1.2,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: viewAllButtonRef.current,
-            start: "top 90%",
-            end: "top 70%",
-            toggleActions: "play none none reverse"
-          }
-        }
-      );
-
-      // Parallax for button
-      gsap.to(viewAllButtonRef.current, {
-        yPercent: -15,
+    // Masonry container parallax
+    if (masonryContainerRef.current) {
+      gsap.to(masonryContainerRef.current, {
+        yPercent: -3,
         ease: "none",
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top bottom",
           end: "bottom top",
-          scrub: 1.2,
+          scrub: 0.5,
+          invalidateOnRefresh: true
+        }
+      });
+    }
+
+    // View all button animation
+    if (viewAllButtonRef.current) {
+      gsap.fromTo(viewAllButtonRef.current,
+        {
+          opacity: 0,
+          y: 40,
+          scale: 0.95
+        },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 1,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: viewAllButtonRef.current,
+            start: "top 95%",
+            end: "top 75%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      );
+
+      // Subtle parallax for button
+      gsap.to(viewAllButtonRef.current, {
+        yPercent: -8,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1,
           invalidateOnRefresh: true
         }
       });
@@ -199,14 +199,14 @@ export const FeaturedProjectSection = (): JSX.Element => {
     // Background elements parallax
     if (backgroundElementsRef.current) {
       gsap.to(backgroundElementsRef.current, {
-        yPercent: -30,
-        rotation: 180,
+        yPercent: -20,
+        rotation: 90,
         ease: "none",
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top bottom",
           end: "bottom top",
-          scrub: 2,
+          scrub: 1.5,
           invalidateOnRefresh: true
         }
       });
