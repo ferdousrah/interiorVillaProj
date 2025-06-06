@@ -7,396 +7,170 @@ interface CustomCursorProps {
 
 export const CustomCursor: React.FC<CustomCursorProps> = ({ className }) => {
   const cursorRef = useRef<HTMLDivElement>(null);
-  const pointerRef = useRef<HTMLDivElement>(null);
-  const trailRef = useRef<HTMLDivElement>(null);
-  const glowRef = useRef<HTMLDivElement>(null);
-  const arrowsRef = useRef<HTMLDivElement>(null);
-  const rippleRef = useRef<HTMLDivElement>(null);
-  
   const [isMoving, setIsMoving] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-  
+  const [isIdle, setIsIdle] = useState(false);
+  const moveTimeoutRef = useRef<NodeJS.Timeout>();
   const idleTimeoutRef = useRef<NodeJS.Timeout>();
-  const mousePositionRef = useRef({ x: 0, y: 0 });
-  const lastMoveTimeRef = useRef(0);
 
   useEffect(() => {
-    // Check if device supports hover (not touch device)
+    // Check if device supports hover (desktop)
     const hasHover = window.matchMedia('(hover: hover)').matches;
     if (!hasHover) return;
 
     const cursor = cursorRef.current;
-    const pointer = pointerRef.current;
-    const trail = trailRef.current;
-    const glow = glowRef.current;
-    const arrows = arrowsRef.current;
-    const ripple = rippleRef.current;
+    if (!cursor) return;
 
-    if (!cursor || !pointer || !trail || !glow || !arrows || !ripple) return;
-
-    // Set initial positions off-screen
-    gsap.set([cursor, pointer, trail, glow, arrows, ripple], {
+    // Set initial position off-screen
+    gsap.set(cursor, {
       x: -100,
       y: -100,
       scale: 0
     });
 
-    // Optimized mouse move handler with throttling
+    let mouseX = 0;
+    let mouseY = 0;
+
     const handleMouseMove = (e: MouseEvent) => {
-      const now = Date.now();
-      
-      // Throttle to 60fps max
-      if (now - lastMoveTimeRef.current < 16) return;
-      lastMoveTimeRef.current = now;
+      mouseX = e.clientX;
+      mouseY = e.clientY;
 
-      const { clientX: x, clientY: y } = e;
-      mousePositionRef.current = { x, y };
-
-      if (!isVisible) {
-        setIsVisible(true);
-        // Fast entrance animation
-        gsap.to([cursor, pointer, trail, glow], {
-          scale: 1,
-          duration: 0.2,
-          ease: "power2.out",
-          stagger: 0.02
-        });
-      }
-
-      // Ultra-fast cursor tracking with different speeds for layered effect
-      gsap.to(pointer, {
-        x: x,
-        y: y,
-        duration: 0.05, // Fastest - immediate response
-        ease: "none"
-      });
-
+      // Update cursor position with smooth tracking
       gsap.to(cursor, {
-        x: x,
-        y: y,
-        duration: 0.1, // Very fast
-        ease: "power1.out"
+        x: mouseX,
+        y: mouseY,
+        duration: 0.15,
+        ease: "power2.out"
       });
 
-      gsap.to(trail, {
-        x: x,
-        y: y,
-        duration: 0.15, // Slightly slower for trail effect
-        ease: "power1.out"
-      });
-
-      gsap.to(glow, {
-        x: x,
-        y: y,
-        duration: 0.2, // Slowest for smooth glow
-        ease: "power1.out"
-      });
-
-      gsap.to(arrows, {
-        x: x,
-        y: y,
-        duration: 0.08,
-        ease: "power1.out"
-      });
-
-      // Set moving state
-      if (!isMoving) {
-        setIsMoving(true);
-        // Quick transition to active state
-        gsap.to([cursor, pointer, trail, glow, arrows], {
-          borderColor: '#A9F577',
-          backgroundColor: '#A9F577',
-          duration: 0.2,
-          ease: "power2.out"
-        });
-        
-        // Show arrows
-        gsap.to(arrows, {
+      // Show cursor on first move
+      if (cursor.style.opacity === '0' || cursor.style.opacity === '') {
+        gsap.to(cursor, {
           opacity: 1,
           scale: 1,
-          duration: 0.2,
+          duration: 0.3,
           ease: "back.out(1.7)"
         });
       }
 
-      // Clear and reset idle timeout
+      // Set moving state
+      setIsMoving(true);
+      setIsIdle(false);
+
+      // Clear existing timeouts
+      if (moveTimeoutRef.current) {
+        clearTimeout(moveTimeoutRef.current);
+      }
       if (idleTimeoutRef.current) {
         clearTimeout(idleTimeoutRef.current);
       }
 
-      idleTimeoutRef.current = setTimeout(() => {
+      // Set timeout for when movement stops
+      moveTimeoutRef.current = setTimeout(() => {
         setIsMoving(false);
-        // Quick transition to idle state
-        gsap.to([cursor, pointer, trail, glow, arrows], {
-          borderColor: '#CC4922',
-          backgroundColor: '#CC4922',
-          duration: 0.3,
-          ease: "power2.out"
-        });
         
-        // Hide arrows
-        gsap.to(arrows, {
-          opacity: 0,
-          scale: 0.8,
-          duration: 0.3,
-          ease: "power2.out"
-        });
-      }, 800); // Reduced from 1500ms to 800ms for faster response
+        // Set idle timeout
+        idleTimeoutRef.current = setTimeout(() => {
+          setIsIdle(true);
+        }, 500);
+      }, 100);
     };
 
-    // Fast click handler
-    const handleMouseDown = () => {
+    const handleMouseLeave = () => {
       gsap.to(cursor, {
-        scale: 0.8,
-        duration: 0.1,
-        ease: "power2.out"
-      });
-      
-      gsap.to(pointer, {
-        scale: 1.5,
-        duration: 0.1,
-        ease: "power2.out"
-      });
-
-      // Quick ripple effect
-      gsap.set(ripple, {
-        x: mousePositionRef.current.x,
-        y: mousePositionRef.current.y,
-        scale: 0,
-        opacity: 0.8
-      });
-      
-      gsap.to(ripple, {
-        scale: 3,
         opacity: 0,
-        duration: 0.4,
-        ease: "power2.out"
+        scale: 0.5,
+        duration: 0.3,
+        ease: "power2.in"
       });
     };
 
-    const handleMouseUp = () => {
-      gsap.to([cursor, pointer], {
+    const handleMouseEnter = () => {
+      gsap.to(cursor, {
+        opacity: 1,
         scale: 1,
-        duration: 0.15,
+        duration: 0.3,
         ease: "back.out(1.7)"
       });
     };
 
-    // Fast mouse leave handler
-    const handleMouseLeave = () => {
-      setIsVisible(false);
-      gsap.to([cursor, pointer, trail, glow, arrows, ripple], {
-        scale: 0,
-        duration: 0.2,
-        ease: "power2.out"
-      });
-    };
-
     // Add event listeners
-    document.addEventListener('mousemove', handleMouseMove, { passive: true });
-    document.addEventListener('mousedown', handleMouseDown, { passive: true });
-    document.addEventListener('mouseup', handleMouseUp, { passive: true });
-    document.addEventListener('mouseleave', handleMouseLeave, { passive: true });
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseleave', handleMouseLeave);
+    document.addEventListener('mouseenter', handleMouseEnter);
 
     // Cleanup
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mousedown', handleMouseDown);
-      document.removeEventListener('mouseup', handleMouseUp);
       document.removeEventListener('mouseleave', handleMouseLeave);
+      document.removeEventListener('mouseenter', handleMouseEnter);
       
+      if (moveTimeoutRef.current) {
+        clearTimeout(moveTimeoutRef.current);
+      }
       if (idleTimeoutRef.current) {
         clearTimeout(idleTimeoutRef.current);
       }
     };
-  }, [isMoving, isVisible]);
+  }, []);
 
-  // Check if device supports hover
+  // Don't render on touch devices
   const hasHover = typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches;
   if (!hasHover) return null;
 
   return (
-    <>
-      {/* Hide default cursor globally */}
-      <style jsx global>{`
-        * {
-          cursor: none !important;
-        }
-        
-        a, button, input, textarea, select, [role="button"], [tabindex] {
-          cursor: none !important;
-        }
-      `}</style>
-
-      {/* Glow Layer - Largest, softest */}
+    <div
+      ref={cursorRef}
+      className={`fixed top-0 left-0 pointer-events-none z-[9999] mix-blend-difference ${className || ''}`}
+      style={{
+        width: '24px',
+        height: '24px',
+        borderRadius: '50%',
+        backgroundColor: isIdle ? '#CC4922' : '#A9F577',
+        transform: 'translate(-50%, -50%)',
+        transition: 'background-color 0.3s ease',
+        opacity: 0,
+        willChange: 'transform, opacity, background-color'
+      }}
+    >
+      {/* Inner dot for pointer precision */}
       <div
-        ref={glowRef}
-        className="fixed pointer-events-none z-[9998] mix-blend-difference"
+        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
         style={{
-          width: '48px',
-          height: '48px',
-          marginLeft: '-24px',
-          marginTop: '-24px',
+          width: '4px',
+          height: '4px',
           borderRadius: '50%',
-          background: `radial-gradient(circle, ${isMoving ? '#A9F577' : '#CC4922'}40 0%, transparent 70%)`,
-          filter: 'blur(8px)',
-          willChange: 'transform, background'
+          backgroundColor: 'white',
+          opacity: 0.8
+        }}
+      />
+      
+      {/* Outer ring for visual appeal */}
+      <div
+        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 border-2 border-white/30"
+        style={{
+          width: '32px',
+          height: '32px',
+          borderRadius: '50%',
+          animation: isMoving ? 'pulse 1s infinite' : 'none'
         }}
       />
 
-      {/* Trail Layer - Following ring */}
-      <div
-        ref={trailRef}
-        className="fixed pointer-events-none z-[9999] mix-blend-difference"
-        style={{
-          width: '36px',
-          height: '36px',
-          marginLeft: '-18px',
-          marginTop: '-18px',
-          borderRadius: '50%',
-          border: `2px solid ${isMoving ? '#A9F577' : '#CC4922'}`,
-          background: `${isMoving ? '#A9F577' : '#CC4922'}20`,
-          backdropFilter: 'blur(2px)',
-          willChange: 'transform, border-color, background'
-        }}
-      />
-
-      {/* Main Cursor Ring */}
-      <div
-        ref={cursorRef}
-        className="fixed pointer-events-none z-[10000] mix-blend-difference"
-        style={{
-          width: '28px',
-          height: '28px',
-          marginLeft: '-14px',
-          marginTop: '-14px',
-          borderRadius: '50%',
-          border: `2px dashed ${isMoving ? '#A9F577' : '#CC4922'}`,
-          background: 'transparent',
-          animation: isMoving ? 'spin 1.5s linear infinite' : 'spin 3s linear infinite',
-          willChange: 'transform, border-color'
-        }}
-      />
-
-      {/* Pointer Dot - Fastest tracking */}
-      <div
-        ref={pointerRef}
-        className="fixed pointer-events-none z-[10001] mix-blend-difference"
-        style={{
-          width: '8px',
-          height: '8px',
-          marginLeft: '-4px',
-          marginTop: '-4px',
-          borderRadius: '50%',
-          background: `${isMoving ? '#A9F577' : '#CC4922'}`,
-          boxShadow: `0 0 10px ${isMoving ? '#A9F577' : '#CC4922'}80`,
-          willChange: 'transform, background, box-shadow'
-        }}
-      />
-
-      {/* Directional Arrows - Only visible when moving */}
-      <div
-        ref={arrowsRef}
-        className="fixed pointer-events-none z-[10002] mix-blend-difference"
-        style={{
-          width: '40px',
-          height: '40px',
-          marginLeft: '-20px',
-          marginTop: '-20px',
-          opacity: 0,
-          scale: 0.8,
-          willChange: 'transform, opacity'
-        }}
-      >
-        {/* Top Arrow */}
-        <div
-          style={{
-            position: 'absolute',
-            top: '2px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            width: '0',
-            height: '0',
-            borderLeft: '4px solid transparent',
-            borderRight: '4px solid transparent',
-            borderBottom: `6px solid ${isMoving ? '#A9F577' : '#CC4922'}`,
-          }}
-        />
-        
-        {/* Right Arrow */}
-        <div
-          style={{
-            position: 'absolute',
-            right: '2px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            width: '0',
-            height: '0',
-            borderTop: '4px solid transparent',
-            borderBottom: '4px solid transparent',
-            borderLeft: `6px solid ${isMoving ? '#A9F577' : '#CC4922'}`,
-          }}
-        />
-        
-        {/* Bottom Arrow */}
-        <div
-          style={{
-            position: 'absolute',
-            bottom: '2px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            width: '0',
-            height: '0',
-            borderLeft: '4px solid transparent',
-            borderRight: '4px solid transparent',
-            borderTop: `6px solid ${isMoving ? '#A9F577' : '#CC4922'}`,
-          }}
-        />
-        
-        {/* Left Arrow */}
-        <div
-          style={{
-            position: 'absolute',
-            left: '2px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            width: '0',
-            height: '0',
-            borderTop: '4px solid transparent',
-            borderBottom: '4px solid transparent',
-            borderRight: `6px solid ${isMoving ? '#A9F577' : '#CC4922'}`,
-          }}
-        />
-      </div>
-
-      {/* Click Ripple Effect */}
-      <div
-        ref={rippleRef}
-        className="fixed pointer-events-none z-[10002] mix-blend-difference"
-        style={{
-          width: '20px',
-          height: '20px',
-          marginLeft: '-10px',
-          marginTop: '-10px',
-          borderRadius: '50%',
-          border: `2px solid ${isMoving ? '#A9F577' : '#CC4922'}`,
-          background: 'transparent',
-          opacity: 0,
-          willChange: 'transform, opacity'
-        }}
-      />
-
-      {/* CSS Animations */}
       <style jsx>{`
-        @keyframes spin {
-          from {
-            transform: rotate(0deg);
+        @keyframes pulse {
+          0% {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 0.3;
           }
-          to {
-            transform: rotate(360deg);
+          50% {
+            transform: translate(-50%, -50%) scale(1.2);
+            opacity: 0.1;
+          }
+          100% {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 0.3;
           }
         }
       `}</style>
-    </>
+    </div>
   );
 };
