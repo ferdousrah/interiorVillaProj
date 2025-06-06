@@ -6,6 +6,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import Masonry from 'react-masonry-css';
 import { Fancybox } from "@fancyapps/ui";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SplitText } from "gsap/SplitText";
+
+gsap.registerPlugin(ScrollTrigger, SplitText);
 
 interface Project {
   id: number;
@@ -26,6 +31,14 @@ export const FeaturedProjectSection = (): JSX.Element => {
   const [activeTabLeft, setActiveTabLeft] = useState(0);
   const tabRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
 
+  // Refs for parallax effects
+  const sectionRef = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const tabsContainerRef = useRef<HTMLDivElement>(null);
+  const masonryContainerRef = useRef<HTMLDivElement>(null);
+  const viewAllButtonRef = useRef<HTMLButtonElement>(null);
+  const backgroundElementsRef = useRef<HTMLDivElement>(null);
+
   const categories = [
     { value: "all", label: "All" },
     { value: "residential", label: "Residential" },
@@ -40,6 +53,170 @@ export const FeaturedProjectSection = (): JSX.Element => {
       setActiveTabLeft(activeTab.offsetLeft);
     }
   }, [selectedCategory]);
+
+  // Parallax and animation effects
+  useEffect(() => {
+    if (!sectionRef.current) return;
+
+    // Split text animation for heading
+    if (headingRef.current) {
+      const splitText = new SplitText(headingRef.current, { 
+        type: "words,chars",
+        charsClass: "char",
+        wordsClass: "word"
+      });
+
+      // Initial state for heading
+      gsap.set(splitText.chars, {
+        opacity: 0,
+        y: 80,
+        rotationX: -90,
+        transformOrigin: "50% 50% -50px"
+      });
+
+      // Heading reveal animation
+      gsap.to(splitText.chars, {
+        duration: 1.4,
+        opacity: 1,
+        y: 0,
+        rotationX: 0,
+        stagger: {
+          amount: 1,
+          from: "start"
+        },
+        ease: "power4.out",
+        scrollTrigger: {
+          trigger: headingRef.current,
+          start: "top 85%",
+          end: "top 50%",
+          toggleActions: "play none none reverse"
+        }
+      });
+
+      // Parallax effect for heading
+      gsap.to(headingRef.current, {
+        yPercent: -20,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1.5,
+          invalidateOnRefresh: true
+        }
+      });
+    }
+
+    // Tabs container animation and parallax
+    if (tabsContainerRef.current) {
+      gsap.fromTo(tabsContainerRef.current,
+        {
+          opacity: 0,
+          x: 50,
+          scale: 0.95
+        },
+        {
+          opacity: 1,
+          x: 0,
+          scale: 1,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: tabsContainerRef.current,
+            start: "top 85%",
+            end: "top 60%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      );
+
+      // Parallax for tabs
+      gsap.to(tabsContainerRef.current, {
+        yPercent: -10,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1,
+          invalidateOnRefresh: true
+        }
+      });
+    }
+
+    // Masonry container parallax
+    if (masonryContainerRef.current) {
+      gsap.to(masonryContainerRef.current, {
+        yPercent: -5,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.8,
+          invalidateOnRefresh: true
+        }
+      });
+    }
+
+    // View all button animation
+    if (viewAllButtonRef.current) {
+      gsap.fromTo(viewAllButtonRef.current,
+        {
+          opacity: 0,
+          y: 60,
+          scale: 0.9
+        },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 1.2,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: viewAllButtonRef.current,
+            start: "top 90%",
+            end: "top 70%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      );
+
+      // Parallax for button
+      gsap.to(viewAllButtonRef.current, {
+        yPercent: -15,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1.2,
+          invalidateOnRefresh: true
+        }
+      });
+    }
+
+    // Background elements parallax
+    if (backgroundElementsRef.current) {
+      gsap.to(backgroundElementsRef.current, {
+        yPercent: -30,
+        rotation: 180,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 2,
+          invalidateOnRefresh: true
+        }
+      });
+    }
+
+    // Cleanup function
+    return () => {
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
+  }, []);
 
   useEffect(() => {
     // First, destroy any existing Fancybox instances
@@ -142,10 +319,46 @@ export const FeaturedProjectSection = (): JSX.Element => {
   };
 
   return (
-    <section className="w-full py-16 md:py-28 bg-[#f7f9fb]">
-      <div className="container mx-auto px-4 max-w-[1280px]">
+    <section 
+      ref={sectionRef}
+      className="w-full py-16 md:py-28 bg-[#f7f9fb] relative overflow-hidden"
+      style={{
+        transformStyle: 'preserve-3d',
+        perspective: '1000px'
+      }}
+    >
+      {/* Background decorative elements */}
+      <div 
+        ref={backgroundElementsRef}
+        className="absolute inset-0 pointer-events-none will-change-transform"
+        style={{
+          transformOrigin: 'center center',
+          backfaceVisibility: 'hidden',
+          transform: 'translate3d(0, 0, 0)'
+        }}
+      >
+        <div className="absolute top-20 left-10 w-6 h-6 bg-[#75bf44] rounded-full opacity-10 animate-pulse" />
+        <div className="absolute top-1/3 right-20 w-4 h-4 bg-[#75bf44] rounded-full opacity-15 animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute bottom-1/4 left-1/4 w-8 h-8 bg-[#75bf44] rounded-full opacity-8 animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-2/3 right-1/3 w-3 h-3 bg-[#75bf44] rounded-full opacity-12 animate-pulse" style={{ animationDelay: '3s' }} />
+        
+        {/* Geometric shapes */}
+        <div className="absolute top-40 right-10 w-12 h-12 border-2 border-[#75bf44] opacity-5 rotate-45" />
+        <div className="absolute bottom-40 left-16 w-16 h-16 border border-[#75bf44] opacity-8 rounded-full" />
+      </div>
+
+      <div className="container mx-auto px-4 max-w-[1280px] relative z-10">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 md:gap-8 mb-8 md:mb-16">
-          <h2 className="[font-family:'Fahkwang',Helvetica] font-medium text-[#4E545A] text-2xl md:text-[40px] leading-tight md:leading-[53.8px]">
+          <h2 
+            ref={headingRef}
+            className="[font-family:'Fahkwang',Helvetica] font-medium text-[#4E545A] text-2xl md:text-[40px] leading-tight md:leading-[53.8px] will-change-transform"
+            style={{
+              transformOrigin: 'center center',
+              backfaceVisibility: 'hidden',
+              transform: 'translate3d(0, 0, 0)',
+              transformStyle: 'preserve-3d'
+            }}
+          >
             Featured Projects
           </h2>
 
@@ -198,7 +411,15 @@ export const FeaturedProjectSection = (): JSX.Element => {
           </div>
 
           {/* Desktop Tabs */}
-          <div className="hidden md:block w-auto">
+          <div 
+            ref={tabsContainerRef}
+            className="hidden md:block w-auto will-change-transform"
+            style={{
+              transformOrigin: 'center center',
+              backfaceVisibility: 'hidden',
+              transform: 'translate3d(0, 0, 0)'
+            }}
+          >
             <Tabs 
               value={selectedCategory} 
               onValueChange={setSelectedCategory}
@@ -250,77 +471,97 @@ export const FeaturedProjectSection = (): JSX.Element => {
           </div>
         </div>
 
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={selectedCategory}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Masonry
-              breakpointCols={breakpointColumns}
-              className="flex -ml-4 md:-ml-8 w-auto"
-              columnClassName="pl-4 md:pl-8 bg-clip-padding"
+        <div 
+          ref={masonryContainerRef}
+          className="will-change-transform"
+          style={{
+            transformOrigin: 'center center',
+            backfaceVisibility: 'hidden',
+            transform: 'translate3d(0, 0, 0)'
+          }}
+        >
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={selectedCategory}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
             >
-              {filteredProjects.map((project) => (
-                <motion.div
-                  key={project.id}
-                  layout
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 20 }}
-                  transition={{ duration: 0.5 }}
-                  className={`mb-4 md:mb-8 relative group overflow-hidden rounded-2xl ${project.width} ${project.height}`}
-                  onMouseEnter={() => setHoveredProject(project.id)}
-                  onMouseLeave={() => setHoveredProject(null)}
-                >
-                  <a
-                    href={project.image}
-                    data-fancybox="service-gallery"
-                    data-caption={project.title}
-                    className="block w-full h-full"
+              <Masonry
+                breakpointCols={breakpointColumns}
+                className="flex -ml-4 md:-ml-8 w-auto"
+                columnClassName="pl-4 md:pl-8 bg-clip-padding"
+              >
+                {filteredProjects.map((project) => (
+                  <motion.div
+                    key={project.id}
+                    layout
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 20 }}
+                    transition={{ duration: 0.5 }}
+                    className={`mb-4 md:mb-8 relative group overflow-hidden rounded-2xl ${project.width} ${project.height} cursor-pointer`}
+                    onMouseEnter={() => setHoveredProject(project.id)}
+                    onMouseLeave={() => setHoveredProject(null)}
+                    style={{
+                      transformStyle: 'preserve-3d',
+                      backfaceVisibility: 'hidden'
+                    }}
                   >
-                    <img
-                      src={project.image}
-                      alt={project.title}
-                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-500 flex items-center justify-center">
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ 
-                          opacity: hoveredProject === project.id ? 1 : 0,
-                          scale: hoveredProject === project.id ? 1 : 0.8
-                        }}
-                        transition={{ duration: 0.3 }}
-                        className="flex flex-col items-center"
-                      >
-                        <div className="w-10 h-10 md:w-12 md:h-12 bg-white rounded-full flex items-center justify-center mb-2 md:mb-4">
-                          <ZoomIn className="w-5 h-5 md:w-6 md:h-6 text-black" />
-                        </div>
-                        <h3 className="text-white text-base md:text-xl font-medium text-center mb-1 md:mb-2 px-2">
-                          {project.title}
-                        </h3>
-                        <p className="text-white text-xs md:text-sm text-center capitalize">
-                          {project.category}
-                        </p>
-                      </motion.div>
-                    </div>
-                  </a>
-                </motion.div>
-              ))}
-            </Masonry>
-          </motion.div>
-        </AnimatePresence>
+                    <a
+                      href={project.image}
+                      data-fancybox="service-gallery"
+                      data-caption={project.title}
+                      className="block w-full h-full"
+                    >
+                      <img
+                        src={project.image}
+                        alt={project.title}
+                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-500 flex items-center justify-center">
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ 
+                            opacity: hoveredProject === project.id ? 1 : 0,
+                            scale: hoveredProject === project.id ? 1 : 0.8
+                          }}
+                          transition={{ duration: 0.3 }}
+                          className="flex flex-col items-center"
+                        >
+                          <div className="w-10 h-10 md:w-12 md:h-12 bg-white rounded-full flex items-center justify-center mb-2 md:mb-4">
+                            <ZoomIn className="w-5 h-5 md:w-6 md:h-6 text-black" />
+                          </div>
+                          <h3 className="text-white text-base md:text-xl font-medium text-center mb-1 md:mb-2 px-2">
+                            {project.title}
+                          </h3>
+                          <p className="text-white text-xs md:text-sm text-center capitalize">
+                            {project.category}
+                          </p>
+                        </motion.div>
+                      </div>
+                    </a>
+                  </motion.div>
+                ))}
+              </Masonry>
+            </motion.div>
+          </AnimatePresence>
+        </div>
 
         <div className="flex justify-center mt-16 md:mt-28">
           <Button 
-            className={`bg-[#1d1e24] text-white rounded-[80px] group relative overflow-hidden transition-all duration-700 ease-out hover:pr-12 md:hover:pr-16 ${
+            ref={viewAllButtonRef}
+            className={`bg-[#1d1e24] text-white rounded-[80px] group relative overflow-hidden transition-all duration-700 ease-out hover:pr-12 md:hover:pr-16 will-change-transform ${
               isHovered ? 'pl-4 md:pl-6' : 'px-4 md:px-6'
             }`}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
+            style={{
+              transformOrigin: 'center center',
+              backfaceVisibility: 'hidden',
+              transform: 'translate3d(0, 0, 0)'
+            }}
           >
             <span className="relative z-10 font-semibold text-sm tracking-[-0.28px] leading-6 transition-transform duration-700 ease-out group-hover:translate-x-[-8px]">
               View all
