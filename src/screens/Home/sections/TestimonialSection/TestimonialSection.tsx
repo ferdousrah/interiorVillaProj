@@ -1,9 +1,14 @@
 import { ArrowLeft, ArrowRight, PlayIcon } from "lucide-react";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Card, CardContent } from "../../../../components/ui/card";
 import useEmblaCarousel from 'embla-carousel-react';
 import { Fancybox } from "@fancyapps/ui";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SplitText } from "gsap/SplitText";
+
+gsap.registerPlugin(ScrollTrigger, SplitText);
 
 export const TestimonialSection = (): JSX.Element => {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
@@ -17,6 +22,14 @@ export const TestimonialSection = (): JSX.Element => {
       '(max-width: 767px)': { slidesToScroll: 1 }
     }
   });
+
+  // Refs for parallax effects
+  const sectionRef = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const descriptionRef = useRef<HTMLParagraphElement>(null);
+  const carouselContainerRef = useRef<HTMLDivElement>(null);
+  const navigationRef = useRef<HTMLDivElement>(null);
+  const backgroundElementsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let fancyboxInstance: any;
@@ -58,6 +71,248 @@ export const TestimonialSection = (): JSX.Element => {
       if (fancyboxInstance) {
         fancyboxInstance.destroy();
       }
+    };
+  }, []);
+
+  // Parallax and animation effects
+  useEffect(() => {
+    if (!sectionRef.current) return;
+
+    // Split text animation for heading
+    if (headingRef.current) {
+      const splitText = new SplitText(headingRef.current, { 
+        type: "words,chars",
+        charsClass: "char",
+        wordsClass: "word"
+      });
+
+      // Set initial state to be visible
+      gsap.set(splitText.chars, {
+        opacity: 1,
+        y: 0,
+        rotationX: 0,
+        transformOrigin: "50% 50%"
+      });
+
+      // Create a subtle reveal animation
+      gsap.fromTo(splitText.chars,
+        {
+          opacity: 0.2,
+          y: 30,
+          scale: 0.9,
+          rotationY: -15
+        },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          rotationY: 0,
+          duration: 1,
+          stagger: {
+            amount: 0.6,
+            from: "start"
+          },
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: headingRef.current,
+            start: "top 90%",
+            end: "top 60%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      );
+
+      // Parallax effect for heading
+      gsap.to(headingRef.current, {
+        yPercent: -8,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.8,
+          invalidateOnRefresh: true
+        }
+      });
+    }
+
+    // Description animation and parallax
+    if (descriptionRef.current) {
+      gsap.fromTo(descriptionRef.current,
+        {
+          opacity: 0,
+          y: 40,
+          filter: "blur(8px)"
+        },
+        {
+          opacity: 1,
+          y: 0,
+          filter: "blur(0px)",
+          duration: 1.2,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: descriptionRef.current,
+            start: "top 85%",
+            end: "top 65%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      );
+
+      // Subtle parallax for description
+      gsap.to(descriptionRef.current, {
+        yPercent: -5,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.5,
+          invalidateOnRefresh: true
+        }
+      });
+    }
+
+    // Carousel container animation and parallax
+    if (carouselContainerRef.current) {
+      gsap.fromTo(carouselContainerRef.current,
+        {
+          opacity: 0,
+          y: 60,
+          scale: 0.95
+        },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 1.5,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: carouselContainerRef.current,
+            start: "top 85%",
+            end: "top 55%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      );
+
+      // Parallax effect for carousel
+      gsap.to(carouselContainerRef.current, {
+        yPercent: -3,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.3,
+          invalidateOnRefresh: true
+        }
+      });
+    }
+
+    // Navigation buttons animation
+    if (navigationRef.current) {
+      const navButtons = navigationRef.current.querySelectorAll('button');
+      
+      gsap.fromTo(navButtons,
+        {
+          opacity: 0,
+          scale: 0.8,
+          x: (i) => i === 0 ? -30 : 30
+        },
+        {
+          opacity: 1,
+          scale: 1,
+          x: 0,
+          duration: 0.8,
+          stagger: 0.2,
+          ease: "back.out(1.7)",
+          scrollTrigger: {
+            trigger: carouselContainerRef.current,
+            start: "top 80%",
+            end: "top 60%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      );
+
+      // Parallax for navigation
+      gsap.to(navButtons, {
+        yPercent: -6,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.4,
+          invalidateOnRefresh: true
+        }
+      });
+    }
+
+    // Background elements parallax
+    if (backgroundElementsRef.current) {
+      gsap.to(backgroundElementsRef.current, {
+        yPercent: -15,
+        rotation: 90,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1.2,
+          invalidateOnRefresh: true
+        }
+      });
+    }
+
+    // Individual card hover animations with 3D effects
+    const cards = carouselContainerRef.current?.querySelectorAll('[data-card]');
+    cards?.forEach((card, index) => {
+      const cardElement = card as HTMLElement;
+      
+      // Staggered entrance animation
+      gsap.fromTo(cardElement,
+        {
+          opacity: 0,
+          y: 80,
+          rotationX: -20,
+          scale: 0.9
+        },
+        {
+          opacity: 1,
+          y: 0,
+          rotationX: 0,
+          scale: 1,
+          duration: 1.2,
+          delay: index * 0.15,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: cardElement,
+            start: "top 90%",
+            end: "top 70%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      );
+
+      // Individual parallax for each card
+      gsap.to(cardElement, {
+        yPercent: -2 - (index * 1.5),
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.2 + (index * 0.1),
+          invalidateOnRefresh: true
+        }
+      });
+    });
+
+    // Cleanup function
+    return () => {
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     };
   }, []);
 
@@ -104,63 +359,159 @@ export const TestimonialSection = (): JSX.Element => {
   const scrollNext = () => emblaApi?.scrollNext();
 
   return (
-    <section className="w-full py-12 md:py-24 relative overflow-hidden">
-      <div className="container mx-auto px-4" style={{ maxWidth: "1219px" }}>
+    <section 
+      ref={sectionRef}
+      className="w-full py-12 md:py-24 relative overflow-hidden"
+      style={{
+        transformStyle: 'preserve-3d',
+        perspective: '1000px'
+      }}
+    >
+      {/* Background decorative elements */}
+      <div 
+        ref={backgroundElementsRef}
+        className="absolute inset-0 pointer-events-none will-change-transform"
+        style={{
+          transformOrigin: 'center center',
+          backfaceVisibility: 'hidden',
+          transform: 'translate3d(0, 0, 0)'
+        }}
+      >
+        <div className="absolute top-20 left-10 w-8 h-8 bg-[#75bf44] rounded-full opacity-8 animate-pulse" />
+        <div className="absolute top-1/3 right-20 w-6 h-6 bg-[#75bf44] rounded-full opacity-12 animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute bottom-1/4 left-1/4 w-10 h-10 bg-[#75bf44] rounded-full opacity-6 animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-2/3 right-1/3 w-4 h-4 bg-[#75bf44] rounded-full opacity-10 animate-pulse" style={{ animationDelay: '3s' }} />
+        
+        {/* Geometric shapes */}
+        <div className="absolute top-40 right-10 w-16 h-16 border-2 border-[#75bf44] opacity-5 rotate-45" />
+        <div className="absolute bottom-40 left-16 w-20 h-20 border border-[#75bf44] opacity-8 rounded-full" />
+        <div className="absolute top-1/2 left-10 w-12 h-12 border-2 border-[#75bf44] opacity-6" style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }} />
+      </div>
+
+      <div className="container mx-auto px-4 relative z-10" style={{ maxWidth: "1219px" }}>
         <div className="flex flex-col items-center mb-8 md:mb-16">
-          <h2 className="font-medium text-2xl md:text-4xl mb-4 md:mb-8 text-center tracking-tight leading-tight font-['Fahkwang',Helvetica]">
+          <h2 
+            ref={headingRef}
+            className="font-medium text-2xl md:text-4xl mb-4 md:mb-8 text-center tracking-tight leading-tight font-['Fahkwang',Helvetica] will-change-transform"
+            style={{
+              transformOrigin: 'center center',
+              backfaceVisibility: 'hidden',
+              transform: 'translate3d(0, 0, 0)',
+              transformStyle: 'preserve-3d',
+              opacity: 1,
+              visibility: 'visible'
+            }}
+          >
             Testimonials
           </h2>
-          <p className="max-w-lg text-center font-text-medium-normal text-base md:text-[length:var(--text-medium-normal-font-size)] tracking-[var(--text-medium-normal-letter-spacing)] leading-[var(--text-medium-normal-line-height)] px-4">
+          <p 
+            ref={descriptionRef}
+            className="max-w-lg text-center font-text-medium-normal text-base md:text-[length:var(--text-medium-normal-font-size)] tracking-[var(--text-medium-normal-letter-spacing)] leading-[var(--text-medium-normal-line-height)] px-4 will-change-transform"
+            style={{
+              transformOrigin: 'center center',
+              backfaceVisibility: 'hidden',
+              transform: 'translate3d(0, 0, 0)'
+            }}
+          >
             We create spaces that inspire and reflect your unique lifestyle
           </p>
         </div>
 
-        <div className="relative">
-          <button
-            onClick={scrollPrev}
-            className="absolute left-0 md:left-4 top-1/2 -translate-y-1/2 z-10 w-8 h-8 md:w-10 md:h-10 rounded-full bg-white flex items-center justify-center shadow-lg cursor-pointer hover:bg-gray-100 transition-all duration-300"
-          >
-            <ArrowLeft className="w-4 h-4 md:w-6 md:h-6 text-black" />
-          </button>
-          
-          <button
-            onClick={scrollNext}
-            className="absolute right-0 md:right-4 top-1/2 -translate-y-1/2 z-10 w-8 h-8 md:w-10 md:h-10 rounded-full bg-white flex items-center justify-center shadow-lg cursor-pointer hover:bg-gray-100 transition-all duration-300"
-          >
-            <ArrowRight className="w-4 h-4 md:w-6 md:h-6 text-black" />
-          </button>
+        <div 
+          ref={carouselContainerRef}
+          className="relative will-change-transform"
+          style={{
+            transformOrigin: 'center center',
+            backfaceVisibility: 'hidden',
+            transform: 'translate3d(0, 0, 0)'
+          }}
+        >
+          <div ref={navigationRef}>
+            <button
+              onClick={scrollPrev}
+              className="absolute left-0 md:left-4 top-1/2 -translate-y-1/2 z-10 w-8 h-8 md:w-10 md:h-10 rounded-full bg-white flex items-center justify-center shadow-lg cursor-pointer hover:bg-gray-100 transition-all duration-300 hover:scale-110 will-change-transform"
+              style={{
+                transformOrigin: 'center center',
+                backfaceVisibility: 'hidden'
+              }}
+            >
+              <ArrowLeft className="w-4 h-4 md:w-6 md:h-6 text-black" />
+            </button>
+            
+            <button
+              onClick={scrollNext}
+              className="absolute right-0 md:right-4 top-1/2 -translate-y-1/2 z-10 w-8 h-8 md:w-10 md:h-10 rounded-full bg-white flex items-center justify-center shadow-lg cursor-pointer hover:bg-gray-100 transition-all duration-300 hover:scale-110 will-change-transform"
+              style={{
+                transformOrigin: 'center center',
+                backfaceVisibility: 'hidden'
+              }}
+            >
+              <ArrowRight className="w-4 h-4 md:w-6 md:h-6 text-black" />
+            </button>
+          </div>
 
           <div className="overflow-hidden" ref={emblaRef}>
             <div className="flex gap-4 md:gap-8">
               {testimonials.map((testimonial) => (
                 <div
                   key={testimonial.id}
-                  className="relative flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%] transition-all duration-500 ease-in-out"
+                  data-card
+                  className="relative flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%] transition-all duration-500 ease-in-out will-change-transform"
                   onMouseEnter={() => setHoveredCard(testimonial.id)}
                   onMouseLeave={() => setHoveredCard(null)}
                   style={{
-                    transform: hoveredCard === testimonial.id ? 'scale(1.05)' : 'scale(1)',
-                    zIndex: hoveredCard === testimonial.id ? 10 : 1
+                    transform: hoveredCard === testimonial.id ? 'scale(1.05) translateY(-8px)' : 'scale(1) translateY(0)',
+                    zIndex: hoveredCard === testimonial.id ? 10 : 1,
+                    transformOrigin: 'center center',
+                    backfaceVisibility: 'hidden',
+                    transformStyle: 'preserve-3d'
                   }}
                 >
                   <Card
-                    className="h-[200px] sm:h-[250px] md:h-[314px] w-full rounded-xl md:rounded-2xl overflow-hidden border-2 border-solid border-[#d1ee2e] bg-cover bg-center relative"
-                    style={{ backgroundImage: `url(${testimonial.image})` }}
+                    className="h-[200px] sm:h-[250px] md:h-[314px] w-full rounded-xl md:rounded-2xl overflow-hidden border-2 border-solid border-[#d1ee2e] bg-cover bg-center relative cursor-pointer"
+                    style={{ 
+                      backgroundImage: `url(${testimonial.image})`,
+                      boxShadow: hoveredCard === testimonial.id 
+                        ? '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 30px rgba(209, 238, 46, 0.3)'
+                        : '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                    }}
                   >
                     <CardContent className="flex items-center justify-center h-full p-0 relative">
+                      {/* Overlay gradient on hover */}
+                      <div 
+                        className="absolute inset-0 transition-opacity duration-500"
+                        style={{
+                          background: hoveredCard === testimonial.id 
+                            ? 'linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(117, 191, 68, 0.2) 100%)'
+                            : 'transparent',
+                          opacity: hoveredCard === testimonial.id ? 1 : 0
+                        }}
+                      />
+                      
                       <a
                         href={testimonial.video}
                         data-fancybox="hero-gallery"
-                        className={`w-12 h-12 md:w-[70px] md:h-[70px] rounded-full md:rounded-[35px] border-2 border-solid border-white shadow-[0px_4px_15px_#00000040] flex items-center justify-center transition-all duration-300 ${
+                        className={`w-12 h-12 md:w-[70px] md:h-[70px] rounded-full md:rounded-[35px] border-2 border-solid border-white shadow-[0px_4px_15px_#00000040] flex items-center justify-center transition-all duration-300 relative z-10 ${
                           hoveredCard === testimonial.id 
                             ? 'bg-white scale-110 transform-gpu' 
                             : 'bg-white/10'
                         }`}
+                        style={{
+                          transform: hoveredCard === testimonial.id 
+                            ? 'scale(1.2) rotateY(10deg)' 
+                            : 'scale(1) rotateY(0deg)',
+                          boxShadow: hoveredCard === testimonial.id 
+                            ? '0 15px 35px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.5)'
+                            : '0px 4px 15px rgba(0, 0, 0, 0.25)'
+                        }}
                       >
                         <PlayIcon 
-                          className={`w-6 h-6 md:w-[38px] md:h-[38px] transition-colors duration-300 ${
+                          className={`w-6 h-6 md:w-[38px] md:h-[38px] transition-all duration-300 ${
                             hoveredCard === testimonial.id ? 'text-[#75bf44]' : 'text-white'
-                          }`} 
+                          }`}
+                          style={{
+                            transform: hoveredCard === testimonial.id ? 'translateX(2px)' : 'translateX(0)'
+                          }}
                         />
                       </a>
                     </CardContent>
