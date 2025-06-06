@@ -58,7 +58,7 @@ export const FeaturedProjectSection = (): JSX.Element => {
   useEffect(() => {
     if (!sectionRef.current) return;
 
-    // Split text animation for heading
+    // Split text animation for heading - FIXED VERSION
     if (headingRef.current) {
       const splitText = new SplitText(headingRef.current, { 
         type: "words,chars",
@@ -66,42 +66,49 @@ export const FeaturedProjectSection = (): JSX.Element => {
         wordsClass: "word"
       });
 
-      // Initial state for heading - ensure it's visible
+      // Set initial state to be visible but slightly transformed
       gsap.set(splitText.chars, {
-        opacity: 0,
-        y: 50,
-        rotationX: -45,
-        transformOrigin: "50% 50% -25px"
+        opacity: 1, // Changed from 0 to 1 to ensure visibility
+        y: 0, // Changed from 50 to 0
+        rotationX: 0, // Changed from -45 to 0
+        transformOrigin: "50% 50%"
       });
 
-      // Heading reveal animation
-      gsap.to(splitText.chars, {
-        duration: 1,
-        opacity: 1,
-        y: 0,
-        rotationX: 0,
-        stagger: {
-          amount: 0.6,
-          from: "start"
+      // Create a subtle reveal animation instead of hiding the text
+      gsap.fromTo(splitText.chars,
+        {
+          opacity: 0.3,
+          y: 20,
+          scale: 0.95
         },
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: headingRef.current,
-          start: "top 90%",
-          end: "top 60%",
-          toggleActions: "play none none reverse"
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.8,
+          stagger: {
+            amount: 0.4,
+            from: "start"
+          },
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: headingRef.current,
+            start: "top 95%",
+            end: "top 70%",
+            toggleActions: "play none none reverse"
+          }
         }
-      });
+      );
 
       // Subtle parallax effect for heading
       gsap.to(headingRef.current, {
-        yPercent: -10,
+        yPercent: -5, // Reduced from -10
         ease: "none",
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top bottom",
           end: "bottom top",
-          scrub: 1,
+          scrub: 0.5,
           invalidateOnRefresh: true
         }
       });
@@ -132,13 +139,13 @@ export const FeaturedProjectSection = (): JSX.Element => {
 
       // Subtle parallax for tabs
       gsap.to(tabsContainerRef.current, {
-        yPercent: -5,
+        yPercent: -3, // Reduced from -5
         ease: "none",
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top bottom",
           end: "bottom top",
-          scrub: 0.8,
+          scrub: 0.3,
           invalidateOnRefresh: true
         }
       });
@@ -147,13 +154,13 @@ export const FeaturedProjectSection = (): JSX.Element => {
     // Masonry container parallax
     if (masonryContainerRef.current) {
       gsap.to(masonryContainerRef.current, {
-        yPercent: -3,
+        yPercent: -2, // Reduced from -3
         ease: "none",
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top bottom",
           end: "bottom top",
-          scrub: 0.5,
+          scrub: 0.2,
           invalidateOnRefresh: true
         }
       });
@@ -184,13 +191,13 @@ export const FeaturedProjectSection = (): JSX.Element => {
 
       // Subtle parallax for button
       gsap.to(viewAllButtonRef.current, {
-        yPercent: -8,
+        yPercent: -4, // Reduced from -8
         ease: "none",
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top bottom",
           end: "bottom top",
-          scrub: 1,
+          scrub: 0.5,
           invalidateOnRefresh: true
         }
       });
@@ -199,14 +206,14 @@ export const FeaturedProjectSection = (): JSX.Element => {
     // Background elements parallax
     if (backgroundElementsRef.current) {
       gsap.to(backgroundElementsRef.current, {
-        yPercent: -20,
-        rotation: 90,
+        yPercent: -10, // Reduced from -20
+        rotation: 45, // Reduced from 90
         ease: "none",
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top bottom",
           end: "bottom top",
-          scrub: 1.5,
+          scrub: 1,
           invalidateOnRefresh: true
         }
       });
@@ -356,7 +363,10 @@ export const FeaturedProjectSection = (): JSX.Element => {
               transformOrigin: 'center center',
               backfaceVisibility: 'hidden',
               transform: 'translate3d(0, 0, 0)',
-              transformStyle: 'preserve-3d'
+              transformStyle: 'preserve-3d',
+              // Ensure the heading is always visible
+              opacity: 1,
+              visibility: 'visible'
             }}
           >
             Featured Projects
