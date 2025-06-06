@@ -6,228 +6,279 @@ interface CustomCursorProps {
 }
 
 export const CustomCursor: React.FC<CustomCursorProps> = ({ className }) => {
-  const cursorRingRef = useRef<HTMLDivElement>(null);
-  const cursorDotRef = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
+  const cursorRef = useRef<HTMLDivElement>(null);
+  const pointerRef = useRef<HTMLDivElement>(null);
   const [isIdle, setIsIdle] = useState(false);
-  const mousePosition = useRef({ x: 0, y: 0 });
+  const [isActive, setIsActive] = useState(false);
   const idleTimeoutRef = useRef<NodeJS.Timeout>();
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const cursorRing = cursorRingRef.current;
-    const cursorDot = cursorDotRef.current;
+    // Check if device is mobile/touch
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768 || 'ontouchstart' in window);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
 
-    if (!cursorRing || !cursorDot) return;
+    if (isMobile) {
+      return () => window.removeEventListener('resize', checkMobile);
+    }
 
+    const cursor = cursorRef.current;
+    const pointer = pointerRef.current;
+    
+    if (!cursor || !pointer) return;
+
+    // Hide default cursor
+    document.body.style.cursor = 'none';
+    
     // Set initial position
-    gsap.set([cursorRing, cursorDot], {
+    gsap.set([cursor, pointer], {
       xPercent: -50,
       yPercent: -50,
       scale: 1,
-      opacity: 0
+      opacity: 1
     });
 
-    const handleMouseMove = (e: MouseEvent) => {
-      mousePosition.current = { x: e.clientX, y: e.clientY };
-      
-      if (!isVisible) {
-        setIsVisible(true);
-        gsap.to([cursorRing, cursorDot], {
-          opacity: 1,
-          duration: 0.3,
-          ease: "power2.out"
-        });
-      }
+    let mouseX = 0;
+    let mouseY = 0;
 
-      // Reset idle state and timer
-      setIsIdle(false);
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+
+      // Clear idle timeout
       if (idleTimeoutRef.current) {
         clearTimeout(idleTimeoutRef.current);
       }
 
-      // Animate cursor position
-      gsap.to(cursorRing, {
-        x: e.clientX,
-        y: e.clientY,
+      // Set cursor to active state immediately
+      if (isIdle) {
+        setIsIdle(false);
+      }
+
+      // Animate cursor and pointer to follow mouse
+      gsap.to(cursor, {
+        x: mouseX,
+        y: mouseY,
         duration: 0.6,
         ease: "power2.out"
       });
 
-      gsap.to(cursorDot, {
-        x: e.clientX,
-        y: e.clientY,
-        duration: 0.1,
-        ease: "power2.out"
+      gsap.to(pointer, {
+        x: mouseX,
+        y: mouseY,
+        duration: 0.3,
+        ease: "power3.out"
       });
 
-      // Set new idle timer
+      // Set idle timeout
       idleTimeoutRef.current = setTimeout(() => {
         setIsIdle(true);
-      }, 2000); // 2 seconds of no movement
+      }, 2000);
+    };
+
+    const handleMouseDown = () => {
+      setIsActive(true);
+    };
+
+    const handleMouseUp = () => {
+      setIsActive(false);
     };
 
     const handleMouseLeave = () => {
-      setIsVisible(false);
-      setIsIdle(false);
-      if (idleTimeoutRef.current) {
-        clearTimeout(idleTimeoutRef.current);
-      }
-      gsap.to([cursorRing, cursorDot], {
+      gsap.to([cursor, pointer], {
         opacity: 0,
         duration: 0.3,
         ease: "power2.out"
       });
     };
 
-    const handleMouseDown = () => {
-      gsap.to(cursorRing, {
-        scale: 0.8,
-        duration: 0.1,
-        ease: "power2.out"
-      });
-      gsap.to(cursorDot, {
-        scale: 1.5,
-        duration: 0.1,
-        ease: "power2.out"
-      });
-    };
-
-    const handleMouseUp = () => {
-      gsap.to(cursorRing, {
-        scale: 1,
-        duration: 0.2,
-        ease: "power2.out"
-      });
-      gsap.to(cursorDot, {
-        scale: 1,
-        duration: 0.2,
+    const handleMouseEnter = () => {
+      gsap.to([cursor, pointer], {
+        opacity: 1,
+        duration: 0.3,
         ease: "power2.out"
       });
     };
 
     // Add event listeners
     document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseleave', handleMouseLeave);
     document.addEventListener('mousedown', handleMouseDown);
     document.addEventListener('mouseup', handleMouseUp);
+    document.addEventListener('mouseleave', handleMouseLeave);
+    document.addEventListener('mouseenter', handleMouseEnter);
 
     // Cleanup
     return () => {
+      document.body.style.cursor = 'auto';
       document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseleave', handleMouseLeave);
       document.removeEventListener('mousedown', handleMouseDown);
       document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener('mouseleave', handleMouseLeave);
+      document.removeEventListener('mouseenter', handleMouseEnter);
+      window.removeEventListener('resize', checkMobile);
+      
       if (idleTimeoutRef.current) {
         clearTimeout(idleTimeoutRef.current);
       }
     };
-  }, [isVisible]);
+  }, [isIdle, isMobile]);
 
-  // Idle animation effect
+  // Animate cursor state changes
   useEffect(() => {
-    const cursorRing = cursorRingRef.current;
-    const cursorDot = cursorDotRef.current;
-
-    if (!cursorRing || !cursorDot) return;
+    const cursor = cursorRef.current;
+    const pointer = pointerRef.current;
+    
+    if (!cursor || !pointer || isMobile) return;
 
     if (isIdle) {
-      // Start idle animations - color change and gentle pulsing
-      gsap.to(cursorRing, {
-        backgroundColor: '#75bf44',
-        borderColor: '#75bf44',
-        scale: 1.2,
-        duration: 1,
-        ease: "power2.out"
-      });
-
-      gsap.to(cursorDot, {
-        backgroundColor: '#75bf44',
+      // Idle state: Orange-red color with pulsing animation
+      gsap.to(cursor, {
         scale: 1.3,
-        duration: 1,
+        duration: 0.8,
         ease: "power2.out"
       });
 
-      // Gentle pulsing animation
-      const pulseAnimation = gsap.to([cursorRing, cursorDot], {
-        scale: "+=0.1",
-        opacity: 0.8,
-        duration: 1.5,
-        ease: "power2.inOut",
-        yoyo: true,
-        repeat: -1
+      gsap.to(pointer, {
+        scale: 1.2,
+        duration: 0.8,
+        ease: "power2.out"
       });
 
-      return () => {
-        pulseAnimation.kill();
-      };
+      // Start pulsing animation
+      gsap.to([cursor, pointer], {
+        scale: "+=0.1",
+        duration: 1.5,
+        yoyo: true,
+        repeat: -1,
+        ease: "sine.inOut"
+      });
+
     } else {
-      // Reset to normal state
-      gsap.to(cursorRing, {
-        backgroundColor: 'transparent',
-        borderColor: '#000000',
+      // Active state: Bright green color, stop pulsing
+      gsap.killTweensOf([cursor, pointer]);
+      
+      gsap.to(cursor, {
         scale: 1,
-        opacity: 1,
         duration: 0.5,
         ease: "power2.out"
       });
 
-      gsap.to(cursorDot, {
-        backgroundColor: '#000000',
+      gsap.to(pointer, {
         scale: 1,
-        opacity: 1,
         duration: 0.5,
         ease: "power2.out"
       });
     }
-  }, [isIdle]);
+  }, [isIdle, isMobile]);
+
+  // Animate click state
+  useEffect(() => {
+    const cursor = cursorRef.current;
+    const pointer = pointerRef.current;
+    
+    if (!cursor || !pointer || isMobile) return;
+
+    if (isActive) {
+      gsap.to(cursor, {
+        scale: 0.8,
+        duration: 0.1,
+        ease: "power2.out"
+      });
+
+      gsap.to(pointer, {
+        scale: 1.5,
+        duration: 0.1,
+        ease: "power2.out"
+      });
+    } else {
+      gsap.to(cursor, {
+        scale: isIdle ? 1.3 : 1,
+        duration: 0.2,
+        ease: "power2.out"
+      });
+
+      gsap.to(pointer, {
+        scale: isIdle ? 1.2 : 1,
+        duration: 0.2,
+        ease: "power2.out"
+      });
+    }
+  }, [isActive, isIdle, isMobile]);
+
+  if (isMobile) {
+    return null;
+  }
 
   return (
     <>
-      {/* Cursor Ring */}
+      {/* Main Bubble Cursor */}
       <div
-        ref={cursorRingRef}
-        className={`fixed top-0 left-0 w-8 h-8 border-2 border-black rounded-full pointer-events-none z-[9999] mix-blend-difference will-change-transform ${className}`}
+        ref={cursorRef}
+        className={`fixed top-0 left-0 pointer-events-none z-[9999] mix-blend-difference ${className || ''}`}
         style={{
-          transformOrigin: 'center center',
-          backfaceVisibility: 'hidden'
-        }}
-      />
-      
-      {/* Cursor Dot */}
-      <div
-        ref={cursorDotRef}
-        className="fixed top-0 left-0 w-2 h-2 bg-black rounded-full pointer-events-none z-[9999] mix-blend-difference will-change-transform"
-        style={{
-          transformOrigin: 'center center',
-          backfaceVisibility: 'hidden'
+          width: '40px',
+          height: '40px',
+          borderRadius: '50%',
+          border: '2px solid',
+          borderColor: isIdle ? '#CC4922' : '#A9F577',
+          backgroundColor: isIdle ? 'rgba(204, 73, 34, 0.2)' : 'rgba(169, 245, 119, 0.2)',
+          backdropFilter: 'blur(8px)',
+          boxShadow: isIdle 
+            ? '0 0 20px rgba(204, 73, 34, 0.4), inset 0 0 20px rgba(204, 73, 34, 0.1)' 
+            : '0 0 20px rgba(169, 245, 119, 0.4), inset 0 0 20px rgba(169, 245, 119, 0.1)',
+          transition: 'border-color 0.8s ease, background-color 0.8s ease, box-shadow 0.8s ease',
+          willChange: 'transform, opacity'
         }}
       />
 
-      {/* Hide default cursor */}
+      {/* Pointer Dot */}
+      <div
+        ref={pointerRef}
+        className="fixed top-0 left-0 pointer-events-none z-[9998]"
+        style={{
+          width: '8px',
+          height: '8px',
+          borderRadius: '50%',
+          backgroundColor: isIdle ? '#CC4922' : '#A9F577',
+          boxShadow: isIdle 
+            ? '0 0 15px rgba(204, 73, 34, 0.8)' 
+            : '0 0 15px rgba(169, 245, 119, 0.8)',
+          transition: 'background-color 0.8s ease, box-shadow 0.8s ease',
+          willChange: 'transform, opacity'
+        }}
+      />
+
+      {/* Global cursor styles */}
       <style jsx global>{`
         * {
           cursor: none !important;
         }
+        
+        a, button, input, textarea, select, [role="button"], [tabindex] {
+          cursor: none !important;
+        }
 
-        /* Show default cursor on touch devices */
+        @media (max-width: 768px) {
+          * {
+            cursor: auto !important;
+          }
+          
+          a, button, input, textarea, select, [role="button"], [tabindex] {
+            cursor: pointer !important;
+          }
+        }
+
         @media (hover: none) and (pointer: coarse) {
           * {
             cursor: auto !important;
           }
           
-          .custom-cursor {
-            display: none !important;
-          }
-        }
-
-        /* Hide custom cursor on mobile */
-        @media (max-width: 768px) {
-          .custom-cursor {
-            display: none !important;
-          }
-          
-          * {
-            cursor: auto !important;
+          a, button, input, textarea, select, [role="button"], [tabindex] {
+            cursor: pointer !important;
           }
         }
       `}</style>
