@@ -24,7 +24,7 @@ export const BlogSection = (): JSX.Element => {
       });
     }
 
-    // GSAP hover animations
+    // GSAP hover animations with blur and brighten effects
     if (imageRef.current && imageContainerRef.current) {
       const image = imageRef.current;
       const container = imageContainerRef.current;
@@ -34,13 +34,13 @@ export const BlogSection = (): JSX.Element => {
       
       hoverTimeline
         .to(image, {
-          scale: 1.15,
-          rotation: 2,
-          duration: 0.6,
+          scale: 1.08,
+          filter: "blur(2px) brightness(1.3) saturate(1.2)",
+          duration: 0.5,
           ease: "power2.out"
         }, 0)
         .to(container, {
-          boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(117, 191, 68, 0.1)",
+          boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.3), 0 0 30px rgba(117, 191, 68, 0.2)",
           duration: 0.4,
           ease: "power2.out"
         }, 0);
@@ -51,14 +51,14 @@ export const BlogSection = (): JSX.Element => {
         
         // Add floating animation
         gsap.to(container, {
-          y: -8,
+          y: -6,
           duration: 0.4,
           ease: "power2.out"
         });
 
-        // Add subtle glow effect
+        // Add container glow effect
         gsap.to(container, {
-          filter: "brightness(1.05) saturate(1.1)",
+          filter: "drop-shadow(0 0 20px rgba(117, 191, 68, 0.3))",
           duration: 0.3,
           ease: "power2.out"
         });
@@ -75,15 +75,15 @@ export const BlogSection = (): JSX.Element => {
           ease: "power2.out"
         });
 
-        // Reset glow effect
+        // Reset container glow effect
         gsap.to(container, {
-          filter: "brightness(1) saturate(1)",
+          filter: "drop-shadow(0 0 0px rgba(117, 191, 68, 0))",
           duration: 0.3,
           ease: "power2.out"
         });
       };
 
-      // Mouse move parallax effect
+      // Mouse move parallax effect with enhanced blur interaction
       const handleMouseMove = (e: MouseEvent) => {
         const rect = container.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
@@ -92,11 +92,16 @@ export const BlogSection = (): JSX.Element => {
         const deltaX = (e.clientX - centerX) / rect.width;
         const deltaY = (e.clientY - centerY) / rect.height;
 
+        // Calculate distance from center for dynamic blur
+        const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        const blurAmount = Math.min(distance * 3, 4); // Max blur of 4px
+
         gsap.to(image, {
-          x: deltaX * 15,
-          y: deltaY * 10,
-          rotationY: deltaX * 10,
-          rotationX: -deltaY * 10,
+          x: deltaX * 12,
+          y: deltaY * 8,
+          rotationY: deltaX * 8,
+          rotationX: -deltaY * 6,
+          filter: `blur(${2 + blurAmount}px) brightness(${1.3 + distance * 0.2}) saturate(${1.2 + distance * 0.3})`,
           duration: 0.3,
           ease: "power2.out",
           transformOrigin: "center center"
