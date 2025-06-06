@@ -5,11 +5,27 @@ import { Button } from "../../../../components/ui/button";
 import { Card, CardContent } from "../../../../components/ui/card";
 import VanillaTilt from 'vanilla-tilt';
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SplitText } from "gsap/SplitText";
+
+gsap.registerPlugin(ScrollTrigger, SplitText);
 
 export const BlogSection = (): JSX.Element => {
   const imageRef = useRef<HTMLImageElement>(null);
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+
+  // Refs for parallax effects
+  const sectionRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const featuredPostRef = useRef<HTMLDivElement>(null);
+  const featuredImageRef = useRef<HTMLDivElement>(null);
+  const featuredContentRef = useRef<HTMLDivElement>(null);
+  const blogCardsRef = useRef<HTMLDivElement>(null);
+  const paginationRef = useRef<HTMLDivElement>(null);
+  const backgroundElementsRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
     if (imageRef.current) {
@@ -24,6 +40,331 @@ export const BlogSection = (): JSX.Element => {
         perspective: 1000,
       });
     }
+  }, []);
+
+  // Parallax and animation effects
+  useEffect(() => {
+    if (!sectionRef.current) return;
+
+    // Split text animation for heading
+    if (headingRef.current) {
+      const splitText = new SplitText(headingRef.current, { 
+        type: "words,chars",
+        charsClass: "char",
+        wordsClass: "word"
+      });
+
+      // Set initial state to be visible
+      gsap.set(splitText.chars, {
+        opacity: 1,
+        y: 0,
+        rotationX: 0,
+        transformOrigin: "50% 50%"
+      });
+
+      // Create a subtle reveal animation
+      gsap.fromTo(splitText.chars,
+        {
+          opacity: 0.2,
+          y: 40,
+          scale: 0.9,
+          rotationY: -20
+        },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          rotationY: 0,
+          duration: 1.2,
+          stagger: {
+            amount: 0.8,
+            from: "start"
+          },
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: headingRef.current,
+            start: "top 90%",
+            end: "top 60%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      );
+
+      // Parallax effect for heading
+      gsap.to(headingRef.current, {
+        yPercent: -12,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1,
+          invalidateOnRefresh: true
+        }
+      });
+    }
+
+    // Header section animation and parallax
+    if (headerRef.current) {
+      gsap.fromTo(headerRef.current,
+        {
+          opacity: 0,
+          y: 60,
+          scale: 0.95
+        },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 1.5,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: headerRef.current,
+            start: "top 85%",
+            end: "top 55%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      );
+
+      // Subtle parallax for header
+      gsap.to(headerRef.current, {
+        yPercent: -8,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.8,
+          invalidateOnRefresh: true
+        }
+      });
+    }
+
+    // Featured post animation and parallax
+    if (featuredPostRef.current) {
+      gsap.fromTo(featuredPostRef.current,
+        {
+          opacity: 0,
+          y: 80,
+          scale: 0.95
+        },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 1.8,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: featuredPostRef.current,
+            start: "top 85%",
+            end: "top 50%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      );
+
+      // Parallax for featured post
+      gsap.to(featuredPostRef.current, {
+        yPercent: -6,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.6,
+          invalidateOnRefresh: true
+        }
+      });
+    }
+
+    // Featured image parallax with enhanced effects
+    if (featuredImageRef.current && imageRef.current) {
+      // Image container parallax
+      gsap.to(featuredImageRef.current, {
+        yPercent: -15,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1.2,
+          invalidateOnRefresh: true
+        }
+      });
+
+      // Image scale effect
+      gsap.fromTo(imageRef.current, 
+        { scale: 1.1 },
+        {
+          scale: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: featuredImageRef.current,
+            start: "top bottom",
+            end: "center center",
+            scrub: 1,
+            invalidateOnRefresh: true
+          }
+        }
+      );
+    }
+
+    // Featured content parallax
+    if (featuredContentRef.current) {
+      gsap.to(featuredContentRef.current, {
+        yPercent: -4,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.4,
+          invalidateOnRefresh: true
+        }
+      });
+    }
+
+    // Blog cards animation and parallax
+    if (blogCardsRef.current) {
+      gsap.fromTo(blogCardsRef.current,
+        {
+          opacity: 0,
+          y: 100,
+          scale: 0.9
+        },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 2,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: blogCardsRef.current,
+            start: "top 85%",
+            end: "top 45%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      );
+
+      // Parallax for blog cards container
+      gsap.to(blogCardsRef.current, {
+        yPercent: -3,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.3,
+          invalidateOnRefresh: true
+        }
+      });
+    }
+
+    // Individual card animations with staggered parallax
+    cardRefs.current.forEach((card, index) => {
+      if (!card) return;
+
+      // Staggered entrance animation
+      gsap.fromTo(card,
+        {
+          opacity: 0,
+          y: 120,
+          rotationX: -20,
+          scale: 0.8
+        },
+        {
+          opacity: 1,
+          y: 0,
+          rotationX: 0,
+          scale: 1,
+          duration: 1.5,
+          delay: index * 0.3,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: card,
+            start: "top 90%",
+            end: "top 60%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      );
+
+      // Individual parallax for each card
+      gsap.to(card, {
+        yPercent: -2 - (index * 2),
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.2 + (index * 0.15),
+          invalidateOnRefresh: true
+        }
+      });
+    });
+
+    // Pagination animation and parallax
+    if (paginationRef.current) {
+      const dots = paginationRef.current.querySelectorAll('div');
+      
+      gsap.fromTo(dots,
+        {
+          opacity: 0,
+          scale: 0.5,
+          y: 30
+        },
+        {
+          opacity: 1,
+          scale: 1,
+          y: 0,
+          duration: 1,
+          stagger: 0.2,
+          ease: "back.out(1.7)",
+          scrollTrigger: {
+            trigger: paginationRef.current,
+            start: "top 90%",
+            end: "top 70%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      );
+
+      // Parallax for pagination
+      gsap.to(paginationRef.current, {
+        yPercent: -8,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.5,
+          invalidateOnRefresh: true
+        }
+      });
+    }
+
+    // Background elements parallax
+    if (backgroundElementsRef.current) {
+      gsap.to(backgroundElementsRef.current, {
+        yPercent: -20,
+        rotation: 180,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1.5,
+          invalidateOnRefresh: true
+        }
+      });
+    }
+
+    // Cleanup function
+    return () => {
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
   }, []);
 
   // Blog post data for mapping
@@ -48,10 +389,46 @@ export const BlogSection = (): JSX.Element => {
   ];
 
   return (
-    <section className="w-full py-20 bg-[#f7f9fb]">
-      <div className="container mx-auto max-w-6xl px-4">
+    <section 
+      ref={sectionRef}
+      className="w-full py-20 bg-[#f7f9fb] relative overflow-hidden"
+      style={{
+        transformStyle: 'preserve-3d',
+        perspective: '1000px'
+      }}
+    >
+      {/* Background decorative elements */}
+      <div 
+        ref={backgroundElementsRef}
+        className="absolute inset-0 pointer-events-none will-change-transform"
+        style={{
+          transformOrigin: 'center center',
+          backfaceVisibility: 'hidden',
+          transform: 'translate3d(0, 0, 0)'
+        }}
+      >
+        <div className="absolute top-20 left-10 w-6 h-6 bg-[#75bf44] rounded-full opacity-15 animate-pulse" />
+        <div className="absolute top-1/3 right-20 w-8 h-8 bg-[#75bf44] rounded-full opacity-10 animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute bottom-1/4 left-1/4 w-10 h-10 bg-[#75bf44] rounded-full opacity-8 animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-2/3 right-1/3 w-4 h-4 bg-[#75bf44] rounded-full opacity-12 animate-pulse" style={{ animationDelay: '3s' }} />
+        
+        {/* Geometric shapes */}
+        <div className="absolute top-40 right-10 w-16 h-16 border-2 border-[#75bf44] opacity-6 rotate-45" />
+        <div className="absolute bottom-40 left-16 w-20 h-20 border border-[#75bf44] opacity-8 rounded-full" />
+        <div className="absolute top-1/2 left-10 w-12 h-12 border-2 border-[#75bf44] opacity-5" style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }} />
+      </div>
+
+      <div className="container mx-auto max-w-6xl px-4 relative z-10">
         {/* Section Header */}
-        <div className="flex flex-col items-center mb-16">
+        <div 
+          ref={headerRef}
+          className="flex flex-col items-center mb-16 will-change-transform"
+          style={{
+            transformOrigin: 'center center',
+            backfaceVisibility: 'hidden',
+            transform: 'translate3d(0, 0, 0)'
+          }}
+        >
           <div className="flex items-center justify-center mb-3">
             <div className="w-1 h-[25px] bg-[#75bf44] rounded-sm"></div>
             <div className="mx-3 [font-family:'Fahkwang',Helvetica] font-normal text-[#48515c] text-sm text-center tracking-[0.90px]">
@@ -60,37 +437,68 @@ export const BlogSection = (): JSX.Element => {
             <div className="w-1 h-[25px] bg-[#75bf44] rounded-sm"></div>
           </div>
 
-          <h2 className="[font-family:'Fahkwang',Helvetica] font-medium text-[40px] text-center tracking-[0] leading-[62px]">
+          <h2 
+            ref={headingRef}
+            className="[font-family:'Fahkwang',Helvetica] font-medium text-[40px] text-center tracking-[0] leading-[62px] will-change-transform"
+            style={{
+              transformOrigin: 'center center',
+              backfaceVisibility: 'hidden',
+              transform: 'translate3d(0, 0, 0)',
+              transformStyle: 'preserve-3d',
+              opacity: 1,
+              visibility: 'visible'
+            }}
+          >
             <span className="text-[#0d1529]">Latest </span>
             <span className="text-[#000000]">Stories</span>
           </h2>
         </div>
 
         {/* Featured Blog Post */}
-        <div className="flex flex-col lg:flex-row gap-8 mb-16">
+        <div 
+          ref={featuredPostRef}
+          className="flex flex-col lg:flex-row gap-8 mb-16 will-change-transform"
+          style={{
+            transformOrigin: 'center center',
+            backfaceVisibility: 'hidden',
+            transform: 'translate3d(0, 0, 0)'
+          }}
+        >
           <div className="lg:w-1/2">
             <div 
-              ref={imageContainerRef}
-              className="relative overflow-hidden rounded-lg shadow-lg transform-gpu cursor-pointer"
+              ref={featuredImageRef}
+              className="relative overflow-hidden rounded-lg shadow-lg transform-gpu cursor-pointer will-change-transform"
               style={{
                 transformStyle: 'preserve-3d',
-                perspective: '1000px'
+                perspective: '1000px',
+                transformOrigin: 'center center',
+                backfaceVisibility: 'hidden',
+                transform: 'translate3d(0, 0, 0)'
               }}
             >
               <img
                 ref={imageRef}
-                className="w-full h-auto object-cover rounded-lg transition-transform duration-500 ease-out hover:scale-110"
+                className="w-full h-auto object-cover rounded-lg transition-transform duration-500 ease-out hover:scale-110 will-change-transform"
                 alt="Interior design blog post"
                 src="/create-an-image-for-a-residential-interior-design-blog-post.svg"
                 style={{
                   transformStyle: 'preserve-3d',
                   backfaceVisibility: 'hidden',
+                  transformOrigin: 'center center'
                 }}
               />
             </div>
           </div>
 
-          <div className="lg:w-1/2">
+          <div 
+            ref={featuredContentRef}
+            className="lg:w-1/2 will-change-transform"
+            style={{
+              transformOrigin: 'center center',
+              backfaceVisibility: 'hidden',
+              transform: 'translate3d(0, 0, 0)'
+            }}
+          >
             <div className="flex items-center mb-3">
               <Badge className="bg-[#75bf44] border-[6px] border-[#75bf445a] rounded-full h-10 w-10 flex items-center justify-center p-0">
                 <span className="text-white text-xs"></span>
@@ -112,7 +520,7 @@ export const BlogSection = (): JSX.Element => {
               spaces for a look that&apos;s always in style.
             </p>
 
-            <Button className="bg-[#75bf44] rounded-[25px] h-9 px-6 relative">
+            <Button className="bg-[#75bf44] rounded-[25px] h-9 px-6 relative transition-all duration-300 hover:scale-105 hover:shadow-lg">
               <span className="[font-family:'Fahkwang',Helvetica] font-bold text-white text-xs tracking-[0.09px]">
                 READ MORE
               </span>
@@ -124,11 +532,20 @@ export const BlogSection = (): JSX.Element => {
         </div>
 
         {/* Blog Post Cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          {blogPosts.map((post) => (
+        <div 
+          ref={blogCardsRef}
+          className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 will-change-transform"
+          style={{
+            transformOrigin: 'center center',
+            backfaceVisibility: 'hidden',
+            transform: 'translate3d(0, 0, 0)'
+          }}
+        >
+          {blogPosts.map((post, index) => (
             <Card
               key={post.id}
-              className="bg-[#f7f9fb] rounded-3xl border-none cursor-pointer transform-gpu transition-all duration-500 ease-out hover:scale-[1.02]"
+              ref={el => cardRefs.current[index] = el}
+              className="bg-[#f7f9fb] rounded-3xl border-none cursor-pointer transform-gpu transition-all duration-500 ease-out hover:scale-[1.02] will-change-transform"
               onMouseEnter={() => setHoveredCard(post.id)}
               onMouseLeave={() => setHoveredCard(null)}
               style={{
@@ -138,7 +555,10 @@ export const BlogSection = (): JSX.Element => {
                 transform: hoveredCard === post.id ? 'translateY(-8px) scale(1.02)' : 'translateY(0) scale(1)',
                 background: hoveredCard === post.id 
                   ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(247, 249, 251, 0.95) 100%)'
-                  : '#f7f9fb'
+                  : '#f7f9fb',
+                transformOrigin: 'center center',
+                backfaceVisibility: 'hidden',
+                transformStyle: 'preserve-3d'
               }}
             >
               <CardContent className="p-6 relative overflow-hidden">
@@ -209,10 +629,18 @@ export const BlogSection = (): JSX.Element => {
         </div>
 
         {/* Pagination Dots */}
-        <div className="flex justify-center gap-4">
-          <div className="w-[9px] h-2.5 bg-[#d7d7d7] rounded-[5px]"></div>
+        <div 
+          ref={paginationRef}
+          className="flex justify-center gap-4 will-change-transform"
+          style={{
+            transformOrigin: 'center center',
+            backfaceVisibility: 'hidden',
+            transform: 'translate3d(0, 0, 0)'
+          }}
+        >
+          <div className="w-[9px] h-2.5 bg-[#d7d7d7] rounded-[5px] transition-all duration-300 hover:bg-[#75bf44]"></div>
           <div className="w-[9px] h-2.5 bg-[#75bf44] rounded-[5px]"></div>
-          <div className="w-[9px] h-2.5 bg-[#d7d7d7] rounded-[5px]"></div>
+          <div className="w-[9px] h-2.5 bg-[#d7d7d7] rounded-[5px] transition-all duration-300 hover:bg-[#75bf44]"></div>
         </div>
       </div>
     </section>
