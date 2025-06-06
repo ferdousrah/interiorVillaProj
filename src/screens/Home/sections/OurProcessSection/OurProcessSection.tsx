@@ -3,8 +3,9 @@ import { Card, CardContent } from "../../../../components/ui/card";
 import { useInView } from "react-intersection-observer";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SplitText } from "gsap/SplitText";
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, SplitText);
 
 interface TimelineStep {
   id: number;
@@ -17,11 +18,86 @@ interface TimelineStep {
 export const OurProcessSection = (): JSX.Element => {
   const timelineRef = useRef<HTMLDivElement>(null);
   const progressLineRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
 
   const [ref, inView] = useInView({
     threshold: 0.1,
     triggerOnce: false,
   });
+
+  useEffect(() => {
+    if (!headingRef.current || !sectionRef.current) return;
+
+    // Split text animation for heading
+    const splitText = new SplitText(headingRef.current, { 
+      type: "words,chars",
+      charsClass: "char",
+      wordsClass: "word"
+    });
+
+    // Initial state for heading
+    gsap.set(splitText.chars, {
+      opacity: 0,
+      y: 100,
+      rotationX: -90,
+      transformOrigin: "50% 50% -50px"
+    });
+
+    // Heading reveal animation
+    gsap.to(splitText.chars, {
+      duration: 1.2,
+      opacity: 1,
+      y: 0,
+      rotationX: 0,
+      stagger: {
+        amount: 0.8,
+        from: "start"
+      },
+      ease: "power4.out",
+      scrollTrigger: {
+        trigger: headingRef.current,
+        start: "top 85%",
+        end: "top 50%",
+        toggleActions: "play none none reverse"
+      }
+    });
+
+    // Parallax effect for heading
+    gsap.to(headingRef.current, {
+      yPercent: -15,
+      ease: "none",
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top bottom",
+        end: "bottom top",
+        scrub: 1,
+        invalidateOnRefresh: true
+      }
+    });
+
+    // Scale effect on scroll
+    gsap.fromTo(headingRef.current, 
+      { scale: 0.95 },
+      {
+        scale: 1,
+        ease: "none",
+        scrollTrigger: {
+          trigger: headingRef.current,
+          start: "top 90%",
+          end: "top 60%",
+          scrub: 1,
+          invalidateOnRefresh: true
+        }
+      }
+    );
+
+    // Cleanup function
+    return () => {
+      splitText.revert();
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
+  }, []);
 
   useEffect(() => {
     if (!timelineRef.current || !progressLineRef.current) return;
@@ -122,8 +198,24 @@ export const OurProcessSection = (): JSX.Element => {
   ];
 
   return (
-    <section className="relative w-full py-16 md:py-32">
-      <h2 className="text-center [font-family:'Fahkwang',Helvetica] font-medium text-[#000000] text-2xl md:text-[40px] leading-tight md:leading-10 mb-12 md:mb-24 px-4">
+    <section 
+      ref={sectionRef}
+      className="relative w-full py-16 md:py-32 overflow-hidden"
+      style={{
+        transformStyle: 'preserve-3d',
+        perspective: '1000px'
+      }}
+    >
+      <h2 
+        ref={headingRef}
+        className="text-center [font-family:'Fahkwang',Helvetica] font-medium text-[#000000] text-2xl md:text-[40px] leading-tight md:leading-10 mb-12 md:mb-24 px-4 will-change-transform"
+        style={{
+          transformOrigin: 'center center',
+          backfaceVisibility: 'hidden',
+          transform: 'translate3d(0, 0, 0)',
+          transformStyle: 'preserve-3d'
+        }}
+      >
         How We Deliver Results
       </h2>
 
@@ -241,7 +333,10 @@ export const OurProcessSection = (): JSX.Element => {
         </div>
       </div>
 
-      
+      {/* Floating decorative elements */}
+      <div className="absolute top-20 left-10 w-3 h-3 bg-[#75bf44] rounded-full opacity-20 animate-pulse" />
+      <div className="absolute bottom-32 right-16 w-5 h-5 bg-[#75bf44] rounded-full opacity-15 animate-pulse" style={{ animationDelay: '1s' }} />
+      <div className="absolute top-1/2 left-1/4 w-2 h-2 bg-[#75bf44] rounded-full opacity-25 animate-pulse" style={{ animationDelay: '2s' }} />
     </section>
   );
 };
