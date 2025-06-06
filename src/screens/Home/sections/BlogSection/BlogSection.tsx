@@ -475,6 +475,7 @@ export const BlogSection = (): JSX.Element => {
                 backfaceVisibility: 'hidden',
                 transform: 'translate3d(0, 0, 0)'
               }}
+              data-cursor-text="View Post"
             >
               <img
                 ref={imageRef}
@@ -520,7 +521,10 @@ export const BlogSection = (): JSX.Element => {
               spaces for a look that&apos;s always in style.
             </p>
 
-            <Button className="bg-[#75bf44] rounded-[25px] h-9 px-6 relative transition-all duration-300 hover:scale-105 hover:shadow-lg">
+            <Button 
+              className="bg-[#75bf44] rounded-[25px] h-9 px-6 relative transition-all duration-300 hover:scale-105 hover:shadow-lg"
+              data-cursor-text="Read Article"
+            >
               <span className="[font-family:'Fahkwang',Helvetica] font-bold text-white text-xs tracking-[0.09px]">
                 READ MORE
               </span>
@@ -548,6 +552,7 @@ export const BlogSection = (): JSX.Element => {
               className="bg-[#f7f9fb] rounded-3xl border-none cursor-pointer transform-gpu transition-all duration-500 ease-out hover:scale-[1.02] will-change-transform"
               onMouseEnter={() => setHoveredCard(post.id)}
               onMouseLeave={() => setHoveredCard(null)}
+              data-cursor-text={`Read: ${post.title.substring(0, 30)}...`}
               style={{
                 boxShadow: hoveredCard === post.id 
                   ? '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 25px rgba(117, 191, 68, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
@@ -593,6 +598,7 @@ export const BlogSection = (): JSX.Element => {
 
                   <Button 
                     className="bg-[#75bf44] rounded-[25px] h-9 px-6 relative transition-all duration-300 hover:bg-[#68ab3c] hover:scale-105"
+                    data-cursor-text="Read More"
                     style={{
                       transform: hoveredCard === post.id ? 'translateY(-2px)' : 'translateY(0)',
                       boxShadow: hoveredCard === post.id 
@@ -638,9 +644,15 @@ export const BlogSection = (): JSX.Element => {
             transform: 'translate3d(0, 0, 0)'
           }}
         >
-          <div className="w-[9px] h-2.5 bg-[#d7d7d7] rounded-[5px] transition-all duration-300 hover:bg-[#75bf44]"></div>
+          <div 
+            className="w-[9px] h-2.5 bg-[#d7d7d7] rounded-[5px] transition-all duration-300 hover:bg-[#75bf44] cursor-pointer"
+            data-cursor-text="Page 1"
+          ></div>
           <div className="w-[9px] h-2.5 bg-[#75bf44] rounded-[5px]"></div>
-          <div className="w-[9px] h-2.5 bg-[#d7d7d7] rounded-[5px] transition-all duration-300 hover:bg-[#75bf44]"></div>
+          <div 
+            className="w-[9px] h-2.5 bg-[#d7d7d7] rounded-[5px] transition-all duration-300 hover:bg-[#75bf44] cursor-pointer"
+            data-cursor-text="Page 3"
+          ></div>
         </div>
       </div>
     </section>

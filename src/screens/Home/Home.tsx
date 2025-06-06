@@ -8,6 +8,7 @@ import { FeaturedProjectSection } from "./sections/FeaturedProjectSection/Featur
 import { OurProcessSection } from "./sections/OurProcessSection/OurProcessSection";
 import { motion, AnimatePresence } from "framer-motion";
 import { BlogSection } from "./sections/BlogSection/BlogSection";
+import { CustomCursor } from "../../components/ui/cursor";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -112,6 +113,9 @@ export const Home = (): JSX.Element => {
 
   return (
     <div className="flex flex-col w-full items-start relative bg-white overflow-x-hidden">
+      {/* Custom Cursor */}
+      <CustomCursor className="custom-cursor" />
+      
       <div ref={heroContainerRef} className="w-full relative overflow-hidden">
         <img
           ref={heroImageRef}
@@ -131,6 +135,7 @@ export const Home = (): JSX.Element => {
               className="absolute left-0 top-1/2 -translate-y-1/2 w-52 h-[41px] object-cover z-10"
               alt="Interior villa dark"
               src="/interior-villa-dark.png"
+              data-cursor-text="Home"
             />
             
             <div className={`ml-64 ${!isScrolled && 'bg-white-fade rounded-[50px] backdrop-blur-[5px]'}`}>
@@ -138,6 +143,7 @@ export const Home = (): JSX.Element => {
                 <button 
                   className="lg:hidden text-white"
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  data-cursor-text="Menu"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isMobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
@@ -160,6 +166,7 @@ export const Home = (): JSX.Element => {
                               ? "bg-[#75bf44] text-white"
                               : "bg-transparent text-[#c6c6c6]"
                           }`}
+                          data-cursor-text={item.name}
                         >
                           <span className="[font-family:'Fahkwang',Helvetica] font-medium text-sm text-center">
                             {item.name}
@@ -185,6 +192,7 @@ export const Home = (): JSX.Element => {
                                     variants={itemVariants}
                                     transition={{ delay: subIndex * 0.1 }}
                                     className="w-full px-4 py-3 text-left text-sm text-white hover:bg-[#75bf44] hover:text-white transition-colors duration-200 [font-family:'Fahkwang',Helvetica]"
+                                    data-cursor-text={subItem}
                                   >
                                     {subItem}
                                   </motion.button>
