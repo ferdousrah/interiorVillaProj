@@ -4,9 +4,11 @@ import { Badge } from "../../../../components/ui/badge";
 import { Button } from "../../../../components/ui/button";
 import { Card, CardContent } from "../../../../components/ui/card";
 import VanillaTilt from 'vanilla-tilt';
+import gsap from "gsap";
 
 export const BlogSection = (): JSX.Element => {
   const imageRef = useRef<HTMLImageElement>(null);
+  const imageContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (imageRef.current) {
@@ -20,6 +22,98 @@ export const BlogSection = (): JSX.Element => {
         easing: "cubic-bezier(.03,.98,.52,.99)",
         perspective: 1000,
       });
+    }
+
+    // GSAP hover animations
+    if (imageRef.current && imageContainerRef.current) {
+      const image = imageRef.current;
+      const container = imageContainerRef.current;
+
+      // Create a timeline for smooth hover animations
+      const hoverTimeline = gsap.timeline({ paused: true });
+      
+      hoverTimeline
+        .to(image, {
+          scale: 1.15,
+          rotation: 2,
+          duration: 0.6,
+          ease: "power2.out"
+        }, 0)
+        .to(container, {
+          boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(117, 191, 68, 0.1)",
+          duration: 0.4,
+          ease: "power2.out"
+        }, 0);
+
+      // Mouse enter event
+      const handleMouseEnter = () => {
+        hoverTimeline.play();
+        
+        // Add floating animation
+        gsap.to(container, {
+          y: -8,
+          duration: 0.4,
+          ease: "power2.out"
+        });
+
+        // Add subtle glow effect
+        gsap.to(container, {
+          filter: "brightness(1.05) saturate(1.1)",
+          duration: 0.3,
+          ease: "power2.out"
+        });
+      };
+
+      // Mouse leave event
+      const handleMouseLeave = () => {
+        hoverTimeline.reverse();
+        
+        // Reset floating animation
+        gsap.to(container, {
+          y: 0,
+          duration: 0.4,
+          ease: "power2.out"
+        });
+
+        // Reset glow effect
+        gsap.to(container, {
+          filter: "brightness(1) saturate(1)",
+          duration: 0.3,
+          ease: "power2.out"
+        });
+      };
+
+      // Mouse move parallax effect
+      const handleMouseMove = (e: MouseEvent) => {
+        const rect = container.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        
+        const deltaX = (e.clientX - centerX) / rect.width;
+        const deltaY = (e.clientY - centerY) / rect.height;
+
+        gsap.to(image, {
+          x: deltaX * 15,
+          y: deltaY * 10,
+          rotationY: deltaX * 10,
+          rotationX: -deltaY * 10,
+          duration: 0.3,
+          ease: "power2.out",
+          transformOrigin: "center center"
+        });
+      };
+
+      // Add event listeners
+      container.addEventListener('mouseenter', handleMouseEnter);
+      container.addEventListener('mouseleave', handleMouseLeave);
+      container.addEventListener('mousemove', handleMouseMove);
+
+      // Cleanup function
+      return () => {
+        container.removeEventListener('mouseenter', handleMouseEnter);
+        container.removeEventListener('mouseleave', handleMouseLeave);
+        container.removeEventListener('mousemove', handleMouseMove);
+      };
     }
   }, []);
 
@@ -66,7 +160,14 @@ export const BlogSection = (): JSX.Element => {
         {/* Featured Blog Post */}
         <div className="flex flex-col lg:flex-row gap-8 mb-16">
           <div className="lg:w-1/2">
-            <div className="relative overflow-hidden rounded-lg shadow-lg transform-gpu">
+            <div 
+              ref={imageContainerRef}
+              className="relative overflow-hidden rounded-lg shadow-lg transform-gpu cursor-pointer"
+              style={{
+                transformStyle: 'preserve-3d',
+                perspective: '1000px'
+              }}
+            >
               <img
                 ref={imageRef}
                 className="w-full h-auto object-cover rounded-lg transition-all duration-700"
