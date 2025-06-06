@@ -24,103 +24,6 @@ export const BlogSection = (): JSX.Element => {
         perspective: 1000,
       });
     }
-
-    // GSAP hover animations with blur and brighten effects
-    if (imageRef.current && imageContainerRef.current) {
-      const image = imageRef.current;
-      const container = imageContainerRef.current;
-
-      // Create a timeline for smooth hover animations
-      const hoverTimeline = gsap.timeline({ paused: true });
-      
-      hoverTimeline
-        .to(image, {
-          scale: 1.08,
-          filter: "blur(2px) brightness(1.3) saturate(1.2)",
-          duration: 0.5,
-          ease: "power2.out"
-        }, 0)
-        .to(container, {
-          boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.3), 0 0 30px rgba(117, 191, 68, 0.2)",
-          duration: 0.4,
-          ease: "power2.out"
-        }, 0);
-
-      // Mouse enter event
-      const handleMouseEnter = () => {
-        hoverTimeline.play();
-        
-        // Add floating animation
-        gsap.to(container, {
-          y: -6,
-          duration: 0.4,
-          ease: "power2.out"
-        });
-
-        // Add container glow effect
-        gsap.to(container, {
-          filter: "drop-shadow(0 0 20px rgba(117, 191, 68, 0.3))",
-          duration: 0.3,
-          ease: "power2.out"
-        });
-      };
-
-      // Mouse leave event
-      const handleMouseLeave = () => {
-        hoverTimeline.reverse();
-        
-        // Reset floating animation
-        gsap.to(container, {
-          y: 0,
-          duration: 0.4,
-          ease: "power2.out"
-        });
-
-        // Reset container glow effect
-        gsap.to(container, {
-          filter: "drop-shadow(0 0 0px rgba(117, 191, 68, 0))",
-          duration: 0.3,
-          ease: "power2.out"
-        });
-      };
-
-      // Mouse move parallax effect with enhanced blur interaction
-      const handleMouseMove = (e: MouseEvent) => {
-        const rect = container.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        
-        const deltaX = (e.clientX - centerX) / rect.width;
-        const deltaY = (e.clientY - centerY) / rect.height;
-
-        // Calculate distance from center for dynamic blur
-        const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-        const blurAmount = Math.min(distance * 3, 4); // Max blur of 4px
-
-        gsap.to(image, {
-          x: deltaX * 12,
-          y: deltaY * 8,
-          rotationY: deltaX * 8,
-          rotationX: -deltaY * 6,
-          filter: `blur(${2 + blurAmount}px) brightness(${1.3 + distance * 0.2}) saturate(${1.2 + distance * 0.3})`,
-          duration: 0.3,
-          ease: "power2.out",
-          transformOrigin: "center center"
-        });
-      };
-
-      // Add event listeners
-      container.addEventListener('mouseenter', handleMouseEnter);
-      container.addEventListener('mouseleave', handleMouseLeave);
-      container.addEventListener('mousemove', handleMouseMove);
-
-      // Cleanup function
-      return () => {
-        container.removeEventListener('mouseenter', handleMouseEnter);
-        container.removeEventListener('mouseleave', handleMouseLeave);
-        container.removeEventListener('mousemove', handleMouseMove);
-      };
-    }
   }, []);
 
   // Blog post data for mapping
@@ -176,7 +79,7 @@ export const BlogSection = (): JSX.Element => {
             >
               <img
                 ref={imageRef}
-                className="w-full h-auto object-cover rounded-lg transition-all duration-700"
+                className="w-full h-auto object-cover rounded-lg transition-transform duration-500 ease-out hover:scale-110"
                 alt="Interior design blog post"
                 src="/create-an-image-for-a-residential-interior-design-blog-post.svg"
                 style={{
