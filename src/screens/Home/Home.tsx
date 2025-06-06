@@ -129,15 +129,15 @@ export const Home = (): JSX.Element => {
           }}
         />
 
-        <header className={`${isScrolled ? 'fixed top-0 left-0 w-full bg-[#1b1b1b]' : 'absolute w-full max-w-[1226px] h-[90px] top-[22px] left-1/2 -translate-x-1/2'} z-50 transition-all duration-300`}>
-          <div className="container mx-auto px-4 relative">
+        <header className={`${isScrolled ? 'fixed top-0 left-0 w-full bg-[#1b1b1b]' : 'absolute w-full top-[22px]'} z-50 transition-all duration-300`}>
+          <div className="container mx-auto px-4 relative flex items-center justify-between h-[90px]">
             <img
-              className="absolute left-0 top-1/2 -translate-y-1/2 w-52 h-[41px] object-cover z-10"
+              className="w-52 h-[41px] object-cover z-10"
               alt="Interior villa dark"
               src="/interior-villa-dark.png"
             />
             
-            <div className={`ml-64 ${!isScrolled && 'bg-white-fade rounded-[50px] backdrop-blur-[5px]'}`}>
+            <div className={`flex items-center ${!isScrolled && 'bg-white-fade rounded-[50px] backdrop-blur-[5px] px-4'}`}>
               <div className="flex items-center justify-end h-[60px]">
                 <button 
                   className="lg:hidden text-white"
