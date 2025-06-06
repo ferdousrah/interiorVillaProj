@@ -243,13 +243,12 @@ export const ServicesSection = (): JSX.Element => {
                 transformStyle: 'preserve-3d'
               }}
             >
-              <Card className="rounded-[5px] overflow-hidden cursor-pointer transition-shadow duration-300 hover:shadow-2xl" data-cursor-text={service.title}>
+              <Card className="rounded-[5px] overflow-hidden transition-shadow duration-300 hover:shadow-2xl">
                 <CardContent className="p-11 pt-11">
                   <div className="flex gap-6">
                     <div
                       className="w-[82px] h-[82px] rounded-full border border-solid border-black flex items-center justify-center transition-transform duration-300 hover:scale-110"
                       style={{ backgroundColor: service.iconBg }}
-                      data-cursor-text="Service Icon"
                     >
                       <img
                         className="w-11 h-[37px] object-cover"
@@ -274,7 +273,6 @@ export const ServicesSection = (): JSX.Element => {
                     <Button
                       variant="ghost"
                       className="[font-family:'Inter',Helvetica] font-semibold text-base transition-transform duration-300 hover:scale-105"
-                      data-cursor-text="Read More"
                     >
                       Read More
                       <ArrowRightIcon className="ml-2 w-[22px] h-[22px] transition-transform duration-300 group-hover:translate-x-1" />
