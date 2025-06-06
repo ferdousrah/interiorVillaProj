@@ -1,5 +1,5 @@
 import { ArrowRightIcon } from "lucide-react";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Badge } from "../../../../components/ui/badge";
 import { Button } from "../../../../components/ui/button";
 import { Card, CardContent } from "../../../../components/ui/card";
@@ -9,6 +9,7 @@ import gsap from "gsap";
 export const BlogSection = (): JSX.Element => {
   const imageRef = useRef<HTMLImageElement>(null);
   const imageContainerRef = useRef<HTMLDivElement>(null);
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
   useEffect(() => {
     if (imageRef.current) {
@@ -224,25 +225,81 @@ export const BlogSection = (): JSX.Element => {
           {blogPosts.map((post) => (
             <Card
               key={post.id}
-              className="bg-[#f7f9fb] rounded-3xl border-none"
+              className="bg-[#f7f9fb] rounded-3xl border-none cursor-pointer transform-gpu transition-all duration-500 ease-out hover:scale-[1.02]"
+              onMouseEnter={() => setHoveredCard(post.id)}
+              onMouseLeave={() => setHoveredCard(null)}
+              style={{
+                boxShadow: hoveredCard === post.id 
+                  ? '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 25px rgba(117, 191, 68, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+                  : '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                transform: hoveredCard === post.id ? 'translateY(-8px) scale(1.02)' : 'translateY(0) scale(1)',
+                background: hoveredCard === post.id 
+                  ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(247, 249, 251, 0.95) 100%)'
+                  : '#f7f9fb'
+              }}
             >
-              <CardContent className="p-6">
-                <div className="mb-4 [font-family:'Fahkwang',Helvetica] font-normal text-[#48515c] text-xs tracking-[0.77px]">
-                  BY {post.author} | {post.date} | {post.readTime}
+              <CardContent className="p-6 relative overflow-hidden">
+                {/* Animated background gradient on hover */}
+                <div 
+                  className="absolute inset-0 opacity-0 transition-opacity duration-500"
+                  style={{
+                    background: 'radial-gradient(circle at 50% 50%, rgba(117, 191, 68, 0.05) 0%, transparent 70%)',
+                    opacity: hoveredCard === post.id ? 1 : 0
+                  }}
+                />
+                
+                <div className="relative z-10">
+                  <div 
+                    className="mb-4 [font-family:'Fahkwang',Helvetica] font-normal text-[#48515c] text-xs tracking-[0.77px] transition-colors duration-300"
+                    style={{
+                      color: hoveredCard === post.id ? '#75bf44' : '#48515c'
+                    }}
+                  >
+                    BY {post.author} | {post.date} | {post.readTime}
+                  </div>
+
+                  <h3 
+                    className="[font-family:'Fahkwang',Helvetica] font-medium text-[#0d1529] text-[32px] tracking-[0] leading-9 mb-6 transition-all duration-300"
+                    style={{
+                      transform: hoveredCard === post.id ? 'translateX(4px)' : 'translateX(0)',
+                      color: hoveredCard === post.id ? '#0a1420' : '#0d1529'
+                    }}
+                  >
+                    {post.title}
+                  </h3>
+
+                  <Button 
+                    className="bg-[#75bf44] rounded-[25px] h-9 px-6 relative transition-all duration-300 hover:bg-[#68ab3c] hover:scale-105"
+                    style={{
+                      transform: hoveredCard === post.id ? 'translateY(-2px)' : 'translateY(0)',
+                      boxShadow: hoveredCard === post.id 
+                        ? '0 8px 25px rgba(117, 191, 68, 0.4)' 
+                        : '0 2px 8px rgba(117, 191, 68, 0.2)'
+                    }}
+                  >
+                    <span className="[font-family:'Fahkwang',Helvetica] font-bold text-white text-xs tracking-[0.09px]">
+                      READ MORE
+                    </span>
+                    <div 
+                      className="w-[26px] h-[26px] bg-white rounded-full ml-3 flex items-center justify-center transition-transform duration-300"
+                      style={{
+                        transform: hoveredCard === post.id ? 'rotate(45deg)' : 'rotate(0deg)'
+                      }}
+                    >
+                      <ArrowRightIcon className="h-4 w-4 text-[#75bf44]" />
+                    </div>
+                  </Button>
                 </div>
 
-                <h3 className="[font-family:'Fahkwang',Helvetica] font-medium text-[#0d1529] text-[32px] tracking-[0] leading-9 mb-6">
-                  {post.title}
-                </h3>
-
-                <Button className="bg-[#75bf44] rounded-[25px] h-9 px-6 relative">
-                  <span className="[font-family:'Fahkwang',Helvetica] font-bold text-white text-xs tracking-[0.09px]">
-                    READ MORE
-                  </span>
-                  <div className="w-[26px] h-[26px] bg-white rounded-full ml-3 flex items-center justify-center">
-                    <ArrowRightIcon className="h-4 w-4 text-[#75bf44]" />
-                  </div>
-                </Button>
+                {/* Decorative elements */}
+                <div 
+                  className="absolute -top-10 -right-10 w-20 h-20 rounded-full transition-all duration-700"
+                  style={{
+                    background: 'radial-gradient(circle, rgba(117, 191, 68, 0.1) 0%, transparent 70%)',
+                    transform: hoveredCard === post.id ? 'scale(1.5) translate(-10px, 10px)' : 'scale(1)',
+                    opacity: hoveredCard === post.id ? 1 : 0
+                  }}
+                />
               </CardContent>
             </Card>
           ))}
