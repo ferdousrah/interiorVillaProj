@@ -269,7 +269,7 @@ export const ServicesSection = (): JSX.Element => {
                   </div>
                 </CardContent>
                 <CardFooter className="p-0">
-                  <div className="w-full h-[49px] bg-[url(/rectangle-285.svg)] bg-[100%_100%] flex items-center justify-center">
+                  <div className="w-full h-[49px] bg-[url(/rectangle-285.svg)] bg-[100%_100%] flex items-center justify-center transition-all duration-300 hover:bg-[#A9F577] group">
                     <Button
                       variant="ghost"
                       className="[font-family:'Inter',Helvetica] font-semibold text-base transition-transform duration-300 hover:scale-105"
