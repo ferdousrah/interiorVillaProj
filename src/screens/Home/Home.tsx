@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button } from "../../components/ui/button";
 import { ServicesSection } from "./sections/ServicesSection/ServicesSection";
 import { FooterSection } from "./sections/FooterSection/FooterSection";
@@ -8,11 +8,17 @@ import { FeaturedProjectSection } from "./sections/FeaturedProjectSection/Featur
 import { OurProcessSection } from "./sections/OurProcessSection/OurProcessSection";
 import { motion, AnimatePresence } from "framer-motion";
 import { BlogSection } from "./sections/BlogSection/BlogSection";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export const Home = (): JSX.Element => {
   const [hoveredMenu, setHoveredMenu] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const heroImageRef = useRef<HTMLImageElement>(null);
+  const heroContainerRef = useRef<HTMLDivElement>(null);
 
   const navItems = [
     { name: "Home", active: true },
@@ -38,6 +44,46 @@ export const Home = (): JSX.Element => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    if (!heroImageRef.current || !heroContainerRef.current) return;
+
+    // Create parallax effect for hero image
+    gsap.to(heroImageRef.current, {
+      yPercent: -50,
+      ease: "none",
+      scrollTrigger: {
+        trigger: heroContainerRef.current,
+        start: "top bottom",
+        end: "bottom top",
+        scrub: true,
+        invalidateOnRefresh: true
+      }
+    });
+
+    // Add subtle scale effect on scroll
+    gsap.fromTo(heroImageRef.current, 
+      {
+        scale: 1.1,
+      },
+      {
+        scale: 1,
+        ease: "none",
+        scrollTrigger: {
+          trigger: heroContainerRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true,
+          invalidateOnRefresh: true
+        }
+      }
+    );
+
+    // Cleanup function
+    return () => {
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
   }, []);
 
   const submenuVariants = {
@@ -66,11 +112,17 @@ export const Home = (): JSX.Element => {
 
   return (
     <div className="flex flex-col w-full items-start relative bg-white overflow-x-hidden">
-      <div className="w-full relative">
+      <div ref={heroContainerRef} className="w-full relative overflow-hidden">
         <img
-          className="w-full h-[800px] object-cover"
+          ref={heroImageRef}
+          className="w-full h-[800px] object-cover will-change-transform"
           alt="Hero background"
           src="/image.png"
+          style={{
+            transformOrigin: 'center center',
+            backfaceVisibility: 'hidden',
+            transform: 'translate3d(0, 0, 0)'
+          }}
         />
 
         <header className={`${isScrolled ? 'fixed top-0 left-0 w-full bg-[#1b1b1b]' : 'absolute w-full max-w-[1226px] h-[90px] top-[22px] left-1/2 -translate-x-1/2'} z-50 transition-all duration-300`}>
