@@ -307,9 +307,24 @@ export const FooterSection = (): JSX.Element => {
                   {socialMediaContainers.map((container, index) => (
                     <div
                       key={index}
-                      className="w-10 h-10 rounded-xl bg-cover bg-center cursor-pointer transition-transform duration-300 hover:scale-110 hover:rotate-12"
+                      className="w-10 h-10 rounded-xl bg-cover bg-center cursor-pointer relative overflow-hidden group transform-gpu transition-all duration-500 ease-out hover:scale-125 hover:-translate-y-2"
                       style={{ backgroundImage: `url(${container})` }}
-                    />
+                    >
+                      {/* Glow effect on hover */}
+                      <div className="absolute inset-0 rounded-xl bg-[#75bf44] opacity-0 group-hover:opacity-30 transition-opacity duration-500 blur-sm scale-110"></div>
+                      
+                      {/* Ripple effect */}
+                      <div className="absolute inset-0 rounded-xl border-2 border-[#75bf44] opacity-0 group-hover:opacity-100 group-hover:scale-150 transition-all duration-700 ease-out"></div>
+                      
+                      {/* Shine effect */}
+                      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-all duration-1000 ease-out"></div>
+                      
+                      {/* Rotation on hover */}
+                      <div 
+                        className="w-full h-full rounded-xl bg-cover bg-center transition-transform duration-500 ease-out group-hover:rotate-12 group-hover:scale-110"
+                        style={{ backgroundImage: `url(${container})` }}
+                      ></div>
+                    </div>
                   ))}
                 </div>
               </div>
