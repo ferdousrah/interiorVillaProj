@@ -15,7 +15,7 @@ import { X, ChevronDown, Home as HomeIcon, User, Briefcase, FolderOpen, BookOpen
 
 gsap.registerPlugin(ScrollTrigger);
 
-export const Home = (): JSX.Element => {
+const Home = (): JSX.Element => {
   const [hoveredMenu, setHoveredMenu] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -631,3 +631,5 @@ export const Home = (): JSX.Element => {
     </div>
   );
 };
+
+export default Home;
