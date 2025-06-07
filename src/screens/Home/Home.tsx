@@ -11,6 +11,7 @@ import { BlogSection } from "./sections/BlogSection/BlogSection";
 import { CustomCursor } from "../../components/ui/cursor";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { X, ChevronDown, Home, User, Briefcase, FolderOpen, BookOpen, Mail } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -18,6 +19,7 @@ export const Home = (): JSX.Element => {
   const [hoveredMenu, setHoveredMenu] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [expandedSubmenu, setExpandedSubmenu] = useState<string | null>(null);
   const heroImageRef = useRef<HTMLImageElement>(null);
   const heroContainerRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLElement>(null);
@@ -25,20 +27,41 @@ export const Home = (): JSX.Element => {
   const menuContainerRef = useRef<HTMLDivElement>(null);
 
   const navItems = [
-    { name: "Home", active: true },
-    { name: "About Us", active: false },
+    { 
+      name: "Home", 
+      active: true,
+      icon: Home
+    },
+    { 
+      name: "About Us", 
+      active: false,
+      icon: User
+    },
     { 
       name: "Services", 
       active: false,
+      icon: Briefcase,
       subItems: [
         "Residential Interior",
         "Commercial Interior",
         "Architectural Consultancy"
       ]
     },
-    { name: "Portfolio", active: false },
-    { name: "Blog", active: false },
-    { name: "Contact Us", active: false },
+    { 
+      name: "Portfolio", 
+      active: false,
+      icon: FolderOpen
+    },
+    { 
+      name: "Blog", 
+      active: false,
+      icon: BookOpen
+    },
+    { 
+      name: "Contact Us", 
+      active: false,
+      icon: Mail
+    },
   ];
 
   useEffect(() => {
@@ -143,6 +166,19 @@ export const Home = (): JSX.Element => {
     };
   }, []);
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMobileMenuOpen]);
+
   const submenuVariants = {
     hidden: { 
       opacity: 0,
@@ -165,6 +201,60 @@ export const Home = (): JSX.Element => {
   const itemVariants = {
     hidden: { opacity: 0, x: -20 },
     visible: { opacity: 1, x: 0 }
+  };
+
+  const sidebarVariants = {
+    closed: {
+      x: "-100%",
+      transition: {
+        type: "spring",
+        stiffness: 400,
+        damping: 40
+      }
+    },
+    open: {
+      x: "0%",
+      transition: {
+        type: "spring",
+        stiffness: 400,
+        damping: 40
+      }
+    }
+  };
+
+  const overlayVariants = {
+    closed: {
+      opacity: 0,
+      transition: {
+        duration: 0.3
+      }
+    },
+    open: {
+      opacity: 1,
+      transition: {
+        duration: 0.3
+      }
+    }
+  };
+
+  const menuItemVariants = {
+    closed: {
+      x: -50,
+      opacity: 0
+    },
+    open: (i: number) => ({
+      x: 0,
+      opacity: 1,
+      transition: {
+        delay: i * 0.1,
+        duration: 0.5,
+        ease: "easeOut"
+      }
+    })
+  };
+
+  const handleSubmenuToggle = (itemName: string) => {
+    setExpandedSubmenu(expandedSubmenu === itemName ? null : itemName);
   };
 
   return (
@@ -223,16 +313,39 @@ export const Home = (): JSX.Element => {
             >
               <div className="flex items-center justify-end h-full">
                 <button 
-                  className="lg:hidden text-white transition-all duration-300 hover:scale-110"
+                  className="lg:hidden text-white transition-all duration-300 hover:scale-110 z-50 relative"
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isMobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
-                  </svg>
+                  <motion.div
+                    animate={isMobileMenuOpen ? "open" : "closed"}
+                    className="w-6 h-6 flex flex-col justify-center items-center"
+                  >
+                    <motion.span
+                      variants={{
+                        closed: { rotate: 0, y: 0 },
+                        open: { rotate: 45, y: 6 }
+                      }}
+                      className="w-6 h-0.5 bg-current block transform origin-center transition-all duration-300"
+                    />
+                    <motion.span
+                      variants={{
+                        closed: { opacity: 1 },
+                        open: { opacity: 0 }
+                      }}
+                      className="w-6 h-0.5 bg-current block mt-1.5 transition-all duration-300"
+                    />
+                    <motion.span
+                      variants={{
+                        closed: { rotate: 0, y: 0 },
+                        open: { rotate: -45, y: -6 }
+                      }}
+                      className="w-6 h-0.5 bg-current block mt-1.5 transform origin-center transition-all duration-300"
+                    />
+                  </motion.div>
                 </button>
 
-                <div className={`lg:relative ${isMobileMenuOpen ? 'absolute top-full left-0 right-0 bg-[#1b1b1b] rounded-b-2xl shadow-2xl' : 'hidden lg:block'}`}>
-                  <nav className="flex flex-col lg:flex-row space-y-2 lg:space-y-0 lg:space-x-2 p-4 lg:p-0">
+                <div className="hidden lg:block">
+                  <nav className="flex space-x-2">
                     {navItems.map((item, index) => (
                       <div 
                         key={index} 
@@ -300,6 +413,149 @@ export const Home = (): JSX.Element => {
             </div>
           </div>
         </header>
+
+        {/* Mobile Sidebar Menu */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <>
+              {/* Overlay */}
+              <motion.div
+                variants={overlayVariants}
+                initial="closed"
+                animate="open"
+                exit="closed"
+                className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+                onClick={() => setIsMobileMenuOpen(false)}
+              />
+
+              {/* Sidebar */}
+              <motion.div
+                variants={sidebarVariants}
+                initial="closed"
+                animate="open"
+                exit="closed"
+                className="fixed top-0 left-0 h-full w-80 bg-gradient-to-br from-[#1a1a1a] via-[#1e1e1e] to-[#1a1a1a] z-50 lg:hidden shadow-2xl"
+                style={{
+                  boxShadow: "20px 0 40px rgba(0, 0, 0, 0.3)"
+                }}
+              >
+                {/* Sidebar Header */}
+                <div className="flex items-center justify-between p-6 border-b border-gray-700/50">
+                  <img
+                    className="w-40 h-8 object-cover"
+                    alt="Interior villa dark"
+                    src="/interior-villa-dark.png"
+                  />
+                  <button
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="w-10 h-10 rounded-full bg-gray-800/50 flex items-center justify-center text-white hover:bg-gray-700/50 transition-all duration-300 hover:scale-110"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {/* Navigation Menu */}
+                <nav className="flex flex-col p-6 space-y-2 overflow-y-auto h-full pb-20">
+                  {navItems.map((item, index) => {
+                    const IconComponent = item.icon;
+                    return (
+                      <motion.div
+                        key={index}
+                        custom={index}
+                        variants={menuItemVariants}
+                        initial="closed"
+                        animate="open"
+                        className="relative"
+                      >
+                        <div
+                          className={`flex items-center justify-between p-4 rounded-xl transition-all duration-300 cursor-pointer group ${
+                            item.active
+                              ? "bg-[#75bf44] text-white shadow-lg"
+                              : "text-gray-300 hover:bg-gray-800/50 hover:text-white"
+                          }`}
+                          onClick={() => {
+                            if (item.subItems) {
+                              handleSubmenuToggle(item.name);
+                            } else {
+                              setIsMobileMenuOpen(false);
+                            }
+                          }}
+                        >
+                          <div className="flex items-center space-x-4">
+                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 ${
+                              item.active 
+                                ? "bg-white/20" 
+                                : "bg-gray-700/50 group-hover:bg-gray-600/50"
+                            }`}>
+                              <IconComponent className="w-5 h-5" />
+                            </div>
+                            <span className="[font-family:'Fahkwang',Helvetica] font-medium text-base">
+                              {item.name}
+                            </span>
+                          </div>
+                          {item.subItems && (
+                            <motion.div
+                              animate={{ rotate: expandedSubmenu === item.name ? 180 : 0 }}
+                              transition={{ duration: 0.3 }}
+                              className="w-6 h-6 flex items-center justify-center"
+                            >
+                              <ChevronDown className="w-4 h-4" />
+                            </motion.div>
+                          )}
+                        </div>
+
+                        {/* Submenu */}
+                        <AnimatePresence>
+                          {item.subItems && expandedSubmenu === item.name && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.3 }}
+                              className="overflow-hidden ml-4 mt-2"
+                            >
+                              {item.subItems.map((subItem, subIndex) => (
+                                <motion.div
+                                  key={subIndex}
+                                  initial={{ x: -20, opacity: 0 }}
+                                  animate={{ x: 0, opacity: 1 }}
+                                  transition={{ delay: subIndex * 0.1 }}
+                                  className="flex items-center p-3 rounded-lg text-gray-400 hover:text-[#75bf44] hover:bg-gray-800/30 transition-all duration-300 cursor-pointer group"
+                                  onClick={() => setIsMobileMenuOpen(false)}
+                                >
+                                  <div className="w-2 h-2 rounded-full bg-gray-600 group-hover:bg-[#75bf44] transition-colors duration-300 mr-4"></div>
+                                  <span className="[font-family:'Fahkwang',Helvetica] font-normal text-sm">
+                                    {subItem}
+                                  </span>
+                                </motion.div>
+                              ))}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </motion.div>
+                    );
+                  })}
+                </nav>
+
+                {/* Sidebar Footer */}
+                <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-gray-700/50 bg-gradient-to-t from-[#1a1a1a] to-transparent">
+                  <div className="text-center">
+                    <p className="text-gray-400 text-xs [font-family:'Fahkwang',Helvetica]">
+                      © 2025 Interior Villa
+                    </p>
+                    <p className="text-gray-500 text-xs [font-family:'Fahkwang',Helvetica] mt-1">
+                      Elevating Interiors with Passion
+                    </p>
+                  </div>
+                </div>
+
+                {/* Decorative Elements */}
+                <div className="absolute top-20 right-6 w-20 h-20 bg-[#75bf44]/10 rounded-full blur-xl"></div>
+                <div className="absolute bottom-32 left-6 w-16 h-16 bg-[#75bf44]/5 rounded-full blur-lg"></div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
       </div>
 
       <AboutSection />
@@ -352,6 +608,24 @@ export const Home = (): JSX.Element => {
         * {
           transition-property: transform, opacity, background-color, border-color, color, box-shadow;
           transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Sidebar scrollbar styling */
+        .sidebar-scroll::-webkit-scrollbar {
+          width: 4px;
+        }
+
+        .sidebar-scroll::-webkit-scrollbar-track {
+          background: transparent;
+        }
+
+        .sidebar-scroll::-webkit-scrollbar-thumb {
+          background: rgba(117, 191, 68, 0.3);
+          border-radius: 2px;
+        }
+
+        .sidebar-scroll::-webkit-scrollbar-thumb:hover {
+          background: rgba(117, 191, 68, 0.5);
         }
       `}</style>
     </div>
