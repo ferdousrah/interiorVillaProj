@@ -217,7 +217,8 @@ export const Home = (): JSX.Element => {
               }`}
               style={{
                 height: isScrolled ? "50px" : "60px",
-                padding: isScrolled ? "0 16px" : !isScrolled ? "0 16px" : "0"
+                padding: isScrolled ? "0 16px" : !isScrolled ? "0 16px" : "0",
+                minWidth: "fit-content"
               }}
             >
               <div className="flex items-center justify-end h-full">
@@ -271,22 +272,20 @@ export const Home = (): JSX.Element => {
                               initial="hidden"
                               animate="visible"
                               exit="hidden"
-                              className="absolute top-full left-0 mt-2 min-w-[200px] bg-[#1b1b1b] rounded-lg shadow-2xl overflow-hidden z-50 border border-[#75bf44]/20"
+                              className="absolute top-full left-0 mt-2 min-w-[200px] bg-[#1b1b1b] rounded-lg shadow-2xl overflow-hidden z-50 border border-[#333333]"
                               style={{
-                                boxShadow: "0 20px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(117, 191, 68, 0.2)"
+                                boxShadow: "0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 0, 0, 0.3)"
                               }}
                             >
-                              <motion.div className="py-1">
+                              <motion.div className="py-2">
                                 {item.subItems.map((subItem, subIndex) => (
                                   <motion.button
                                     key={subIndex}
                                     variants={itemVariants}
                                     transition={{ delay: subIndex * 0.1 }}
-                                    className="w-full px-4 py-3 text-left text-sm text-white hover:bg-[#75bf44] hover:text-white transition-all duration-300 [font-family:'Fahkwang',Helvetica] relative group overflow-hidden"
+                                    className="w-full px-4 py-3 text-left text-sm text-white hover:text-[#75bf44] transition-colors duration-300 [font-family:'Fahkwang',Helvetica] relative group overflow-hidden"
                                   >
                                     <span className="relative z-10">{subItem}</span>
-                                    {/* Slide-in background effect */}
-                                    <div className="absolute inset-0 bg-gradient-to-r from-[#75bf44] to-[#68ab3c] transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out"></div>
                                   </motion.button>
                                 ))}
                               </motion.div>
