@@ -377,15 +377,15 @@ export const TestimonialSection = (): JSX.Element => {
           transform: 'translate3d(0, 0, 0)'
         }}
       >
-        <div className="absolute top-20 left-10 w-8 h-8 bg-[#75bf44] rounded-full opacity-8 animate-pulse" />
-        <div className="absolute top-1/3 right-20 w-6 h-6 bg-[#75bf44] rounded-full opacity-12 animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute bottom-1/4 left-1/4 w-10 h-10 bg-[#75bf44] rounded-full opacity-6 animate-pulse" style={{ animationDelay: '2s' }} />
-        <div className="absolute top-2/3 right-1/3 w-4 h-4 bg-[#75bf44] rounded-full opacity-10 animate-pulse" style={{ animationDelay: '3s' }} />
+        <div className="absolute top-20 left-10 w-8 h-8 bg-primary rounded-full opacity-8 animate-pulse" />
+        <div className="absolute top-1/3 right-20 w-6 h-6 bg-secondary rounded-full opacity-12 animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute bottom-1/4 left-1/4 w-10 h-10 bg-primary rounded-full opacity-6 animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-2/3 right-1/3 w-4 h-4 bg-secondary rounded-full opacity-10 animate-pulse" style={{ animationDelay: '3s' }} />
         
         {/* Geometric shapes */}
-        <div className="absolute top-40 right-10 w-16 h-16 border-2 border-[#75bf44] opacity-5 rotate-45" />
-        <div className="absolute bottom-40 left-16 w-20 h-20 border border-[#75bf44] opacity-8 rounded-full" />
-        <div className="absolute top-1/2 left-10 w-12 h-12 border-2 border-[#75bf44] opacity-6" style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }} />
+        <div className="absolute top-40 right-10 w-16 h-16 border-2 border-primary opacity-5 rotate-45" />
+        <div className="absolute bottom-40 left-16 w-20 h-20 border border-secondary opacity-8 rounded-full" />
+        <div className="absolute top-1/2 left-10 w-12 h-12 border-2 border-primary opacity-6" style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }} />
       </div>
 
       <div className="container mx-auto px-4 relative z-10" style={{ maxWidth: "1219px" }}>
@@ -468,11 +468,11 @@ export const TestimonialSection = (): JSX.Element => {
                   }}
                 >
                   <Card
-                    className="h-[200px] sm:h-[250px] md:h-[314px] w-full rounded-xl md:rounded-2xl overflow-hidden border-2 border-solid border-[#d1ee2e] bg-cover bg-center relative cursor-pointer"
+                    className="h-[200px] sm:h-[250px] md:h-[314px] w-full rounded-xl md:rounded-2xl overflow-hidden border-2 border-solid border-primary bg-cover bg-center relative cursor-pointer"
                     style={{ 
                       backgroundImage: `url(${testimonial.image})`,
                       boxShadow: hoveredCard === testimonial.id 
-                        ? '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 30px rgba(209, 238, 46, 0.3)'
+                        ? '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 30px rgba(117, 191, 68, 0.3)'
                         : '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
                     }}
                   >
@@ -507,7 +507,7 @@ export const TestimonialSection = (): JSX.Element => {
                       >
                         <PlayIcon 
                           className={`w-6 h-6 md:w-[38px] md:h-[38px] transition-all duration-300 ${
-                            hoveredCard === testimonial.id ? 'text-[#75bf44]' : 'text-white'
+                            hoveredCard === testimonial.id ? 'text-primary' : 'text-white'
                           }`}
                           style={{
                             transform: hoveredCard === testimonial.id ? 'translateX(2px)' : 'translateX(0)'

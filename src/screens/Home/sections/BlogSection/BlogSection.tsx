@@ -407,15 +407,15 @@ export const BlogSection = (): JSX.Element => {
           transform: 'translate3d(0, 0, 0)'
         }}
       >
-        <div className="absolute top-20 left-10 w-6 h-6 bg-[#75bf44] rounded-full opacity-15 animate-pulse" />
-        <div className="absolute top-1/3 right-20 w-8 h-8 bg-[#75bf44] rounded-full opacity-10 animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute bottom-1/4 left-1/4 w-10 h-10 bg-[#75bf44] rounded-full opacity-8 animate-pulse" style={{ animationDelay: '2s' }} />
-        <div className="absolute top-2/3 right-1/3 w-4 h-4 bg-[#75bf44] rounded-full opacity-12 animate-pulse" style={{ animationDelay: '3s' }} />
+        <div className="absolute top-20 left-10 w-6 h-6 bg-primary rounded-full opacity-15 animate-pulse" />
+        <div className="absolute top-1/3 right-20 w-8 h-8 bg-secondary rounded-full opacity-10 animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute bottom-1/4 left-1/4 w-10 h-10 bg-primary rounded-full opacity-8 animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-2/3 right-1/3 w-4 h-4 bg-secondary rounded-full opacity-12 animate-pulse" style={{ animationDelay: '3s' }} />
         
         {/* Geometric shapes */}
-        <div className="absolute top-40 right-10 w-16 h-16 border-2 border-[#75bf44] opacity-6 rotate-45" />
-        <div className="absolute bottom-40 left-16 w-20 h-20 border border-[#75bf44] opacity-8 rounded-full" />
-        <div className="absolute top-1/2 left-10 w-12 h-12 border-2 border-[#75bf44] opacity-5" style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }} />
+        <div className="absolute top-40 right-10 w-16 h-16 border-2 border-primary opacity-6 rotate-45" />
+        <div className="absolute bottom-40 left-16 w-20 h-20 border border-secondary opacity-8 rounded-full" />
+        <div className="absolute top-1/2 left-10 w-12 h-12 border-2 border-primary opacity-5" style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }} />
       </div>
 
       <div className="container mx-auto max-w-6xl px-4 relative z-10">
@@ -430,11 +430,11 @@ export const BlogSection = (): JSX.Element => {
           }}
         >
           <div className="flex items-center justify-center mb-3">
-            <div className="w-1 h-[25px] bg-[#75bf44] rounded-sm"></div>
+            <div className="w-1 h-[25px] bg-primary rounded-sm"></div>
             <div className="mx-3 [font-family:'Fahkwang',Helvetica] font-normal text-[#48515c] text-sm text-center tracking-[0.90px]">
               BLOG
             </div>
-            <div className="w-1 h-[25px] bg-[#75bf44] rounded-sm"></div>
+            <div className="w-1 h-[25px] bg-primary rounded-sm"></div>
           </div>
 
           <h2 
@@ -450,7 +450,7 @@ export const BlogSection = (): JSX.Element => {
             }}
           >
             <span className="text-[#0d1529]">Latest </span>
-            <span className="text-[#000000]">Stories</span>
+            <span className="text-secondary">Stories</span>
           </h2>
         </div>
 
@@ -500,7 +500,7 @@ export const BlogSection = (): JSX.Element => {
             }}
           >
             <div className="flex items-center mb-3">
-              <Badge className="bg-[#75bf44] border-[6px] border-[#75bf445a] rounded-full h-10 w-10 flex items-center justify-center p-0">
+              <Badge className="bg-primary border-[6px] border-primary/35 rounded-full h-10 w-10 flex items-center justify-center p-0">
                 <span className="text-white text-xs"></span>
               </Badge>
 
@@ -521,13 +521,13 @@ export const BlogSection = (): JSX.Element => {
             </p>
 
             <Button 
-              className="bg-[#75bf44] rounded-[25px] h-9 px-6 relative transition-all duration-300 hover:scale-105 hover:shadow-lg"
+              className="bg-primary rounded-[25px] h-9 px-6 relative transition-all duration-300 hover:scale-105 hover:shadow-lg hover:bg-primary-hover"
             >
               <span className="[font-family:'Fahkwang',Helvetica] font-bold text-white text-xs tracking-[0.09px]">
                 READ MORE
               </span>
               <div className="w-[26px] h-[26px] bg-white rounded-full ml-3 flex items-center justify-center">
-                <ArrowRightIcon className="h-4 w-4 text-[#75bf44]" />
+                <ArrowRightIcon className="h-4 w-4 text-primary" />
               </div>
             </Button>
           </div>
@@ -594,7 +594,7 @@ export const BlogSection = (): JSX.Element => {
                   </h3>
 
                   <Button 
-                    className="bg-[#75bf44] rounded-[25px] h-9 px-6 relative transition-all duration-300 hover:bg-[#68ab3c] hover:scale-105"
+                    className="bg-primary rounded-[25px] h-9 px-6 relative transition-all duration-300 hover:bg-primary-hover hover:scale-105"
                     style={{
                       transform: hoveredCard === post.id ? 'translateY(-2px)' : 'translateY(0)',
                       boxShadow: hoveredCard === post.id 
@@ -611,7 +611,7 @@ export const BlogSection = (): JSX.Element => {
                         transform: hoveredCard === post.id ? 'rotate(45deg)' : 'rotate(0deg)'
                       }}
                     >
-                      <ArrowRightIcon className="h-4 w-4 text-[#75bf44]" />
+                      <ArrowRightIcon className="h-4 w-4 text-primary" />
                     </div>
                   </Button>
                 </div>
@@ -640,9 +640,9 @@ export const BlogSection = (): JSX.Element => {
             transform: 'translate3d(0, 0, 0)'
           }}
         >
-          <div className="w-[9px] h-2.5 bg-[#d7d7d7] rounded-[5px] transition-all duration-300 hover:bg-[#75bf44]"></div>
-          <div className="w-[9px] h-2.5 bg-[#75bf44] rounded-[5px]"></div>
-          <div className="w-[9px] h-2.5 bg-[#d7d7d7] rounded-[5px] transition-all duration-300 hover:bg-[#75bf44]"></div>
+          <div className="w-[9px] h-2.5 bg-[#d7d7d7] rounded-[5px] transition-all duration-300 hover:bg-primary"></div>
+          <div className="w-[9px] h-2.5 bg-primary rounded-[5px]"></div>
+          <div className="w-[9px] h-2.5 bg-[#d7d7d7] rounded-[5px] transition-all duration-300 hover:bg-primary"></div>
         </div>
       </div>
     </section>

@@ -216,7 +216,7 @@ export const ServicesSection = (): JSX.Element => {
           <h2 className="font-medium text-[40px] leading-[55px] tracking-normal [font-family:'Fahkwang',Helvetica]">
             Services We Offer
           </h2>
-          <p className="font-bold text-triatry text-[25px] leading-[30px] tracking-normal [font-family:'Darker_Grotesque',Helvetica]">
+          <p className="font-bold text-secondary text-[25px] leading-[30px] tracking-normal [font-family:'Darker_Grotesque',Helvetica]">
             Bringing Your Dream Spaces to Life
           </p>
         </div>
@@ -269,10 +269,10 @@ export const ServicesSection = (): JSX.Element => {
                   </div>
                 </CardContent>
                 <CardFooter className="p-0">
-                  <div className="w-full h-[49px] bg-[url(/rectangle-285.svg)] bg-[100%_100%] flex items-center justify-center transition-all duration-300 hover:bg-[#A9F577] group">
+                  <div className="w-full h-[49px] bg-primary flex items-center justify-center transition-all duration-300 hover:bg-primary-hover group">
                     <Button
                       variant="ghost"
-                      className="[font-family:'Inter',Helvetica] font-semibold text-base transition-transform duration-300 hover:scale-105"
+                      className="[font-family:'Inter',Helvetica] font-semibold text-base text-white hover:text-white transition-transform duration-300 hover:scale-105"
                     >
                       Read More
                       <ArrowRightIcon className="ml-2 w-[22px] h-[22px] transition-transform duration-300 group-hover:translate-x-1" />
@@ -315,9 +315,9 @@ export const ServicesSection = (): JSX.Element => {
       </div>
 
       {/* Floating decorative elements */}
-      <div className="absolute top-20 left-10 w-4 h-4 bg-[#75bf44] rounded-full opacity-20 animate-pulse" />
-      <div className="absolute bottom-32 right-16 w-6 h-6 bg-[#75bf44] rounded-full opacity-15 animate-pulse" style={{ animationDelay: '1s' }} />
-      <div className="absolute top-1/2 left-1/4 w-2 h-2 bg-[#75bf44] rounded-full opacity-25 animate-pulse" style={{ animationDelay: '2s' }} />
+      <div className="absolute top-20 left-10 w-4 h-4 bg-primary rounded-full opacity-20 animate-pulse" />
+      <div className="absolute bottom-32 right-16 w-6 h-6 bg-secondary rounded-full opacity-15 animate-pulse" style={{ animationDelay: '1s' }} />
+      <div className="absolute top-1/2 left-1/4 w-2 h-2 bg-primary rounded-full opacity-25 animate-pulse" style={{ animationDelay: '2s' }} />
     </section>
   );
 };

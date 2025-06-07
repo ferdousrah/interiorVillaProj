@@ -344,14 +344,14 @@ export const FeaturedProjectSection = (): JSX.Element => {
           transform: 'translate3d(0, 0, 0)'
         }}
       >
-        <div className="absolute top-20 left-10 w-6 h-6 bg-[#75bf44] rounded-full opacity-10 animate-pulse" />
-        <div className="absolute top-1/3 right-20 w-4 h-4 bg-[#75bf44] rounded-full opacity-15 animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute bottom-1/4 left-1/4 w-8 h-8 bg-[#75bf44] rounded-full opacity-8 animate-pulse" style={{ animationDelay: '2s' }} />
-        <div className="absolute top-2/3 right-1/3 w-3 h-3 bg-[#75bf44] rounded-full opacity-12 animate-pulse" style={{ animationDelay: '3s' }} />
+        <div className="absolute top-20 left-10 w-6 h-6 bg-primary rounded-full opacity-10 animate-pulse" />
+        <div className="absolute top-1/3 right-20 w-4 h-4 bg-secondary rounded-full opacity-15 animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute bottom-1/4 left-1/4 w-8 h-8 bg-primary rounded-full opacity-8 animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-2/3 right-1/3 w-3 h-3 bg-secondary rounded-full opacity-12 animate-pulse" style={{ animationDelay: '3s' }} />
         
         {/* Geometric shapes */}
-        <div className="absolute top-40 right-10 w-12 h-12 border-2 border-[#75bf44] opacity-5 rotate-45" />
-        <div className="absolute bottom-40 left-16 w-16 h-16 border border-[#75bf44] opacity-8 rounded-full" />
+        <div className="absolute top-40 right-10 w-12 h-12 border-2 border-primary opacity-5 rotate-45" />
+        <div className="absolute bottom-40 left-16 w-16 h-16 border border-secondary opacity-8 rounded-full" />
       </div>
 
       <div className="container mx-auto px-4 max-w-[1280px] relative z-10">
@@ -376,7 +376,7 @@ export const FeaturedProjectSection = (): JSX.Element => {
           <div className="block md:hidden w-full relative">
             <motion.button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="w-full bg-[#E9FFDA] text-[#4E545A] rounded-[88px] flex items-center justify-between px-6 py-3"
+              className="w-full bg-primary-light text-[#4E545A] rounded-[88px] flex items-center justify-between px-6 py-3"
               whileTap={{ scale: 0.98 }}
             >
               <span className="[font-family:'Fahkwang',Helvetica] font-normal">
@@ -407,7 +407,7 @@ export const FeaturedProjectSection = (): JSX.Element => {
                         setIsMobileMenuOpen(false);
                       }}
                       className="w-full px-6 py-3 text-left relative overflow-hidden"
-                      whileHover={{ backgroundColor: "#E9FFDA" }}
+                      whileHover={{ backgroundColor: "rgba(117, 191, 68, 0.1)" }}
                       transition={{ duration: 0.2 }}
                     >
                       <span className="[font-family:'Fahkwang',Helvetica] font-normal text-[#4E545A] relative z-10">
@@ -435,7 +435,7 @@ export const FeaturedProjectSection = (): JSX.Element => {
               onValueChange={setSelectedCategory}
               className="w-auto"
             >
-              <TabsList className="bg-[#E9FFDA] h-auto p-1 gap-2 rounded-[88px] flex flex-nowrap relative">
+              <TabsList className="bg-primary-light h-auto p-1 gap-2 rounded-[88px] flex flex-nowrap relative">
                 <motion.div
                   className="absolute bg-white rounded-[88px] transition-all duration-300"
                   layoutId="activeTab"
@@ -454,9 +454,9 @@ export const FeaturedProjectSection = (): JSX.Element => {
                     ref={el => tabRefs.current[category.value] = el}
                     onMouseEnter={() => setHoveredTab(category.value)}
                     onMouseLeave={() => setHoveredTab(null)}
-                    className={`relative [font-family:'Fahkwang',Helvetica] font-normal text-[#4E545A] text-sm whitespace-nowrap leading-[18.8px] px-6 py-2 rounded-[88px] transition-all duration-300 hover:text-[#75bf44] ${
+                    className={`relative [font-family:'Fahkwang',Helvetica] font-normal text-[#4E545A] text-sm whitespace-nowrap leading-[18.8px] px-6 py-2 rounded-[88px] transition-all duration-300 hover:text-primary ${
                       selectedCategory === category.value 
-                        ? 'text-[#75bf44] z-10' 
+                        ? 'text-primary z-10' 
                         : ''
                     }`}
                     style={{
@@ -576,10 +576,10 @@ export const FeaturedProjectSection = (): JSX.Element => {
             <span className="relative z-10 font-semibold text-sm tracking-[-0.28px] leading-6 transition-transform duration-700 ease-out group-hover:translate-x-[-8px]">
               View all
             </span>
-            <div className={`absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 md:w-8 md:h-8 bg-[#d1ee2e] rounded-full flex items-center justify-center transition-all duration-700 ease-out ${
+            <div className={`absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 md:w-8 md:h-8 bg-secondary rounded-full flex items-center justify-center transition-all duration-700 ease-out ${
               isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'
             }`}>
-              <ArrowUpRightIcon className="w-3 h-3 md:w-4 md:h-4 text-black" />
+              <ArrowUpRightIcon className="w-3 h-3 md:w-4 md:h-4 text-white" />
             </div>
           </Button>
         </div>

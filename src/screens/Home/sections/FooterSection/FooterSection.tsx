@@ -259,15 +259,15 @@ export const FooterSection = (): JSX.Element => {
           transform: 'translate3d(0, 0, 0)'
         }}
       >
-        <div className="absolute top-20 left-10 w-8 h-8 bg-[#75bf44] rounded-full opacity-8 animate-pulse" />
-        <div className="absolute top-1/3 right-20 w-6 h-6 bg-[#75bf44] rounded-full opacity-12 animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute bottom-1/4 left-1/4 w-10 h-10 bg-[#75bf44] rounded-full opacity-6 animate-pulse" style={{ animationDelay: '2s' }} />
-        <div className="absolute top-2/3 right-1/3 w-4 h-4 bg-[#75bf44] rounded-full opacity-10 animate-pulse" style={{ animationDelay: '3s' }} />
+        <div className="absolute top-20 left-10 w-8 h-8 bg-primary rounded-full opacity-8 animate-pulse" />
+        <div className="absolute top-1/3 right-20 w-6 h-6 bg-secondary rounded-full opacity-12 animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute bottom-1/4 left-1/4 w-10 h-10 bg-primary rounded-full opacity-6 animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-2/3 right-1/3 w-4 h-4 bg-secondary rounded-full opacity-10 animate-pulse" style={{ animationDelay: '3s' }} />
         
         {/* Geometric shapes */}
-        <div className="absolute top-40 right-10 w-16 h-16 border-2 border-[#75bf44] opacity-5 rotate-45" />
-        <div className="absolute bottom-40 left-16 w-20 h-20 border border-[#75bf44] opacity-8 rounded-full" />
-        <div className="absolute top-1/2 left-10 w-12 h-12 border-2 border-[#75bf44] opacity-6" style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }} />
+        <div className="absolute top-40 right-10 w-16 h-16 border-2 border-primary opacity-5 rotate-45" />
+        <div className="absolute bottom-40 left-16 w-20 h-20 border border-secondary opacity-8 rounded-full" />
+        <div className="absolute top-1/2 left-10 w-12 h-12 border-2 border-primary opacity-6" style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }} />
       </div>
 
       <div className="container mx-auto px-4 max-w-7xl relative z-10">
@@ -310,11 +310,11 @@ export const FooterSection = (): JSX.Element => {
                       className="w-10 h-10 rounded-xl bg-cover bg-center cursor-pointer relative overflow-hidden group transform-gpu transition-all duration-500 ease-out hover:scale-125 hover:-translate-y-2"
                       style={{ backgroundImage: `url(${container})` }}
                     >
-                      {/* Glow effect on hover - Updated to #A9F577 */}
-                      <div className="absolute inset-0 rounded-xl bg-[#A9F577] opacity-0 group-hover:opacity-30 transition-opacity duration-500 blur-sm scale-110"></div>
+                      {/* Glow effect on hover - Updated to primary color */}
+                      <div className="absolute inset-0 rounded-xl bg-primary opacity-0 group-hover:opacity-30 transition-opacity duration-500 blur-sm scale-110"></div>
                       
-                      {/* Ripple effect - Updated to #A9F577 */}
-                      <div className="absolute inset-0 rounded-xl border-2 border-[#A9F577] opacity-0 group-hover:opacity-100 group-hover:scale-150 transition-all duration-700 ease-out"></div>
+                      {/* Ripple effect - Updated to primary color */}
+                      <div className="absolute inset-0 rounded-xl border-2 border-primary opacity-0 group-hover:opacity-100 group-hover:scale-150 transition-all duration-700 ease-out"></div>
                       
                       {/* Shine effect */}
                       <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-all duration-1000 ease-out"></div>
@@ -347,22 +347,22 @@ export const FooterSection = (): JSX.Element => {
 
               <div className="flex flex-col items-start gap-3 w-full">
                 <Input
-                  className="bg-[#9b9b9b1f] rounded-xl border-[0.5px] border-solid border-[#ebebeb] text-white [font-family:'Fahkwang',Helvetica] p-3 h-auto transition-all duration-300 focus:scale-105 focus:border-[#75bf44]"
+                  className="bg-[#9b9b9b1f] rounded-xl border-[0.5px] border-solid border-[#ebebeb] text-white [font-family:'Fahkwang',Helvetica] p-3 h-auto transition-all duration-300 focus:scale-105 focus:border-primary"
                   placeholder="Your Name"
                 />
 
                 <Input
-                  className="bg-[#9b9b9b1f] rounded-xl border-[0.5px] border-solid border-[#ebebeb] text-white [font-family:'Fahkwang',Helvetica] p-3 h-auto transition-all duration-300 focus:scale-105 focus:border-[#75bf44]"
+                  className="bg-[#9b9b9b1f] rounded-xl border-[0.5px] border-solid border-[#ebebeb] text-white [font-family:'Fahkwang',Helvetica] p-3 h-auto transition-all duration-300 focus:scale-105 focus:border-primary"
                   placeholder="Your Email"
                 />
 
                 <Textarea
-                  className="bg-[#9b9b9b1f] rounded-xl border-[0.5px] border-solid border-[#ebebeb] text-white [font-family:'Fahkwang',Helvetica] p-3 h-[211px] resize-none transition-all duration-300 focus:scale-105 focus:border-[#75bf44]"
+                  className="bg-[#9b9b9b1f] rounded-xl border-[0.5px] border-solid border-[#ebebeb] text-white [font-family:'Fahkwang',Helvetica] p-3 h-[211px] resize-none transition-all duration-300 focus:scale-105 focus:border-primary"
                   placeholder="Describe Your Case"
                 />
               </div>
 
-              <Button className="w-full bg-[#75bf44] rounded-[60px] text-black [font-family:'Fahkwang',Helvetica] font-medium text-base py-3 shadow-[inset_0px_0px_12px_4px_#00000040] hover:bg-[#68ab3c] transition-all duration-300 hover:scale-105 hover:shadow-lg">
+              <Button className="w-full bg-primary rounded-[60px] text-black [font-family:'Fahkwang',Helvetica] font-medium text-base py-3 shadow-[inset_0px_0px_12px_4px_#00000040] hover:bg-primary-hover transition-all duration-300 hover:scale-105 hover:shadow-lg">
                 Send Message
               </Button>
             </CardContent>
@@ -389,11 +389,11 @@ export const FooterSection = (): JSX.Element => {
                   <a
                     key={itemIndex}
                     href="#"
-                    className="[font-family:'Fahkwang',Helvetica] font-normal text-white text-sm tracking-[0] leading-6 transition-all duration-300 hover:text-[#75bf44] hover:translate-x-2 relative group overflow-hidden"
+                    className="[font-family:'Fahkwang',Helvetica] font-normal text-white text-sm tracking-[0] leading-6 transition-all duration-300 hover:text-primary hover:translate-x-2 relative group overflow-hidden"
                   >
                     <span className="relative z-10">{item}</span>
                     {/* Draw underline animation */}
-                    <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-[#75bf44] transition-all duration-500 ease-out group-hover:w-full"></span>
+                    <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-primary transition-all duration-500 ease-out group-hover:w-full"></span>
                   </a>
                 ))}
               </div>
@@ -412,10 +412,10 @@ export const FooterSection = (): JSX.Element => {
             transform: 'translate3d(0, 0, 0)'
           }}
         >
-          <div className="[font-family:'Fahkwang',Helvetica] font-normal text-white text-sm tracking-[0] leading-6 transition-colors duration-300 hover:text-[#75bf44] relative group overflow-hidden cursor-pointer">
+          <div className="[font-family:'Fahkwang',Helvetica] font-normal text-white text-sm tracking-[0] leading-6 transition-colors duration-300 hover:text-primary relative group overflow-hidden cursor-pointer">
             <span className="relative z-10">Privacy Policy/Terms</span>
             {/* Draw underline animation for bottom link too */}
-            <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-[#75bf44] transition-all duration-500 ease-out group-hover:w-full"></span>
+            <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-primary transition-all duration-500 ease-out group-hover:w-full"></span>
           </div>
 
           <div className="flex items-center gap-2 mt-4 sm:mt-0">

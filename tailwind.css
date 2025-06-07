@@ -12,7 +12,7 @@
   --abu-stroke: rgba(235, 235, 235, 1);
   --black: rgba(27, 27, 27, 1);
   --grey: rgba(198, 198, 198, 1);
-  --light-green: rgba(168, 255, 54, 1);
+  --light-green: rgba(117, 191, 68, 1); /* Updated to primary color */
   --text: rgba(78, 84, 90, 1);
   --text-medium-normal-font-family: "Assistant", Helvetica;
   --text-medium-normal-font-size: 18px;
@@ -35,6 +35,14 @@
   --triatry: rgba(245, 245, 245, 1);
   --white: rgba(255, 255, 255, 1);
   --white-fade: rgba(255, 255, 255, 0.2);
+  
+  /* New color variables */
+  --primary: rgba(117, 191, 68, 1); /* #75BF44 */
+  --primary-light: rgba(117, 191, 68, 0.1);
+  --primary-hover: rgba(104, 171, 60, 1); /* Darker shade for hover */
+  --secondary: rgba(238, 84, 40, 1); /* #EE5428 */
+  --secondary-light: rgba(238, 84, 40, 0.1);
+  --secondary-hover: rgba(214, 76, 36, 1); /* Darker shade for hover */
 }
 
 @tailwind base;
@@ -118,4 +126,22 @@
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
+}
+
+/* Custom scrollbar for better UX */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #75bf44; /* Primary color */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #68ab3c; /* Primary hover color */
 }

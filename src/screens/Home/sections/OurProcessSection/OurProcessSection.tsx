@@ -223,7 +223,7 @@ export const OurProcessSection = (): JSX.Element => {
         <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-2 md:transform md:-translate-x-1/2 bg-abu-bg rounded-[32px] overflow-hidden">
           <div
             ref={progressLineRef}
-            className="w-full bg-[#75bf44] rounded-[32px] origin-top transition-all duration-500"
+            className="w-full bg-primary rounded-[32px] origin-top transition-all duration-500"
             style={{ height: "0%" }}
           />
         </div>
@@ -248,7 +248,7 @@ export const OurProcessSection = (): JSX.Element => {
               <div className="hidden md:flex flex-1 items-center justify-end">
                 {step.id % 2 === 1 && (
                   <div className="step-icon w-20 h-20 md:w-32 md:h-32 mr-8">
-                    <div className="w-full h-full rounded-full bg-[#E9FFDA] flex items-center justify-center p-6">
+                    <div className="w-full h-full rounded-full bg-primary-light flex items-center justify-center p-6">
                       <img
                         src={step.iconSrc}
                         alt={`Step ${step.id} icon`}
@@ -298,7 +298,7 @@ export const OurProcessSection = (): JSX.Element => {
                   </div>
                 ) : (
                   <div className="step-icon w-20 h-20 md:w-32 md:h-32 ml-8">
-                    <div className="w-full h-full rounded-full bg-[#E9FFDA] flex items-center justify-center p-6">
+                    <div className="w-full h-full rounded-full bg-primary-light flex items-center justify-center p-6">
                       <img
                         src={step.iconSrc}
                         alt={`Step ${step.id} icon`}
@@ -314,7 +314,7 @@ export const OurProcessSection = (): JSX.Element => {
               {/* Mobile Layout - Content */}
               <div className="md:hidden">
                 <div className="step-icon w-20 h-20 mb-4">
-                  <div className="w-full h-full rounded-full bg-[#E9FFDA] flex items-center justify-center p-4">
+                  <div className="w-full h-full rounded-full bg-primary-light flex items-center justify-center p-4">
                     <img
                       src={step.iconSrc}
                       alt={`Step ${step.id} icon`}
@@ -334,9 +334,9 @@ export const OurProcessSection = (): JSX.Element => {
       </div>
 
       {/* Floating decorative elements */}
-      <div className="absolute top-20 left-10 w-3 h-3 bg-[#75bf44] rounded-full opacity-20 animate-pulse" />
-      <div className="absolute bottom-32 right-16 w-5 h-5 bg-[#75bf44] rounded-full opacity-15 animate-pulse" style={{ animationDelay: '1s' }} />
-      <div className="absolute top-1/2 left-1/4 w-2 h-2 bg-[#75bf44] rounded-full opacity-25 animate-pulse" style={{ animationDelay: '2s' }} />
+      <div className="absolute top-20 left-10 w-3 h-3 bg-primary rounded-full opacity-20 animate-pulse" />
+      <div className="absolute bottom-32 right-16 w-5 h-5 bg-secondary rounded-full opacity-15 animate-pulse" style={{ animationDelay: '1s' }} />
+      <div className="absolute top-1/2 left-1/4 w-2 h-2 bg-primary rounded-full opacity-25 animate-pulse" style={{ animationDelay: '2s' }} />
     </section>
   );
 };

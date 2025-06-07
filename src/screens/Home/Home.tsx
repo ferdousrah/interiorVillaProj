@@ -355,9 +355,9 @@ const Home = (): JSX.Element => {
                       >
                         <Button
                           variant={item.active ? "default" : "ghost"}
-                          className={`min-w-[108px] px-6 rounded-[50px] whitespace-nowrap transition-all duration-300 hover:bg-[#75bf44] hover:text-white hover:scale-105 hover:shadow-lg ${
+                          className={`min-w-[108px] px-6 rounded-[50px] whitespace-nowrap transition-all duration-300 hover:bg-primary hover:text-white hover:scale-105 hover:shadow-lg ${
                             item.active
-                              ? "bg-[#75bf44] text-white shadow-lg"
+                              ? "bg-primary text-white shadow-lg"
                               : "bg-transparent text-[#c6c6c6] hover:shadow-[0_0_20px_rgba(117,191,68,0.3)]"
                           }`}
                           style={{
@@ -396,7 +396,7 @@ const Home = (): JSX.Element => {
                                     key={subIndex}
                                     variants={itemVariants}
                                     transition={{ delay: subIndex * 0.1 }}
-                                    className="w-full px-4 py-3 text-left text-sm text-white hover:text-[#75bf44] transition-colors duration-300 [font-family:'Fahkwang',Helvetica] relative group overflow-hidden"
+                                    className="w-full px-4 py-3 text-left text-sm text-white hover:text-primary transition-colors duration-300 [font-family:'Fahkwang',Helvetica] relative group overflow-hidden"
                                   >
                                     <span className="relative z-10">{subItem}</span>
                                   </motion.button>
@@ -470,7 +470,7 @@ const Home = (): JSX.Element => {
                         <div
                           className={`flex items-center justify-between p-4 rounded-xl transition-all duration-300 cursor-pointer group ${
                             item.active
-                              ? "bg-[#75bf44] text-white shadow-lg"
+                              ? "bg-primary text-white shadow-lg"
                               : "text-gray-300 hover:bg-gray-800/50 hover:text-white"
                           }`}
                           onClick={() => {
@@ -520,10 +520,10 @@ const Home = (): JSX.Element => {
                                   initial={{ x: -20, opacity: 0 }}
                                   animate={{ x: 0, opacity: 1 }}
                                   transition={{ delay: subIndex * 0.1 }}
-                                  className="flex items-center p-3 rounded-lg text-gray-400 hover:text-[#75bf44] hover:bg-gray-800/30 transition-all duration-300 cursor-pointer group"
+                                  className="flex items-center p-3 rounded-lg text-gray-400 hover:text-primary hover:bg-gray-800/30 transition-all duration-300 cursor-pointer group"
                                   onClick={() => setIsMobileMenuOpen(false)}
                                 >
-                                  <div className="w-2 h-2 rounded-full bg-gray-600 group-hover:bg-[#75bf44] transition-colors duration-300 mr-4"></div>
+                                  <div className="w-2 h-2 rounded-full bg-gray-600 group-hover:bg-primary transition-colors duration-300 mr-4"></div>
                                   <span className="[font-family:'Fahkwang',Helvetica] font-normal text-sm">
                                     {subItem}
                                   </span>
@@ -550,8 +550,8 @@ const Home = (): JSX.Element => {
                 </div>
 
                 {/* Decorative Elements */}
-                <div className="absolute top-20 right-6 w-20 h-20 bg-[#75bf44]/10 rounded-full blur-xl"></div>
-                <div className="absolute bottom-32 left-6 w-16 h-16 bg-[#75bf44]/5 rounded-full blur-lg"></div>
+                <div className="absolute top-20 right-6 w-20 h-20 bg-primary/10 rounded-full blur-xl"></div>
+                <div className="absolute bottom-32 left-6 w-16 h-16 bg-primary/5 rounded-full blur-lg"></div>
               </motion.div>
             </>
           )}

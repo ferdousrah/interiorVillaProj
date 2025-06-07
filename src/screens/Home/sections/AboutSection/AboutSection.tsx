@@ -277,13 +277,13 @@ export const AboutSection = (): JSX.Element => {
                   transform: 'translate3d(0, 0, 0)'
                 }}
               >
-                <div className="absolute w-[194px] h-[207px] top-[27px] left-1 bg-[#75bf44] rounded-[97.21px/103.29px]" />
+                <div className="absolute w-[194px] h-[207px] top-[27px] left-1 bg-primary rounded-[97.21px/103.29px]" />
                 <img
                   className="absolute w-[238px] h-[252px] top-0 left-0"
                   alt="Ellipse"
                   src="/ellipse-141.svg"
                 />
-                <div className="absolute w-[139px] top-[126px] left-[38px] font-['Fahkwang',Helvetica] font-normal text-[#75bf44] text-lg text-center tracking-[0] leading-[26px]">
+                <div className="absolute w-[139px] top-[126px] left-[38px] font-['Fahkwang',Helvetica] font-normal text-primary text-lg text-center tracking-[0] leading-[26px]">
                   <span className="font-medium">
                     YEARS
                     <br />
@@ -294,7 +294,7 @@ export const AboutSection = (): JSX.Element => {
                     <br />
                   </span>
                 </div>
-                <div className="absolute w-[103px] top-[74px] left-[61px] font-['Fahkwang',Helvetica] font-bold text-[#75bf44] text-5xl text-center tracking-[0] leading-[50px] whitespace-nowrap">
+                <div className="absolute w-[103px] top-[74px] left-[61px] font-['Fahkwang',Helvetica] font-bold text-primary text-5xl text-center tracking-[0] leading-[50px] whitespace-nowrap">
                   9+
                 </div>
               </div>
@@ -325,7 +325,7 @@ export const AboutSection = (): JSX.Element => {
               <CardContent className="p-12 space-y-10">
                 {features.map((feature, index) => (
                   <div key={index} className="flex items-start gap-8">
-                    <div className="flex-shrink-0 w-[60px] h-[57px] bg-[#75bf44] rounded-[11px] flex items-center justify-center">
+                    <div className="flex-shrink-0 w-[60px] h-[57px] bg-primary rounded-[11px] flex items-center justify-center">
                       <div className="font-['DM_Sans',Helvetica] font-bold text-[#01190c] text-xl">
                         {feature.id}
                       </div>
