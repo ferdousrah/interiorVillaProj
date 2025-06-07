@@ -138,10 +138,10 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #75bf44; /* Primary color */
+  background: #EE5428; /* Secondary color */
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #68ab3c; /* Primary hover color */
+  background: #D64C24; /* Secondary hover color */
 }
