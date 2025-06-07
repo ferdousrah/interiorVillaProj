@@ -11,7 +11,7 @@ import { BlogSection } from "./sections/BlogSection/BlogSection";
 import { CustomCursor } from "../../components/ui/cursor";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { X, ChevronDown, Home, User, Briefcase, FolderOpen, BookOpen, Mail } from "lucide-react";
+import { X, ChevronDown, Home as HomeIcon, User, Briefcase, FolderOpen, BookOpen, Mail } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -30,7 +30,7 @@ export const Home = (): JSX.Element => {
     { 
       name: "Home", 
       active: true,
-      icon: Home
+      icon: HomeIcon
     },
     { 
       name: "About Us", 
